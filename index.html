@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Guess.io</title>
+   <link href="/css/literallycanvas.css" rel="stylesheet">
+   <link href="/css/main-page.css" rel="stylesheet">
+</head>
+
+<!-- dependency: React.js -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-with-addons.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>
+
+<!-- Literally Canvas -->
+<script src="/js/literallycanvas-core.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+<script src="/js/game.js"></script>
+<body>
+   <a id='game-image-download' style='display:none; margin: auto;' onclick='downloadImages();'>Download Previous Games Image:<image src='/images/download_button.png'></image></a>
+   <div id='menu'>
+      <form id='name_form' onsubmit="return playGame()" action="">
+         Enter a name:<br>
+         <input id='name_form_text' type='text' name='Name:' maxlength='15'><br>
+         <input type='submit' value='Play'><br>
+      </form>
+      <button type="button">Settings</button>
+      <script>//Manage direct room connect</script>
+   </div>
+
+   <div id='game_screen' style="display:none;">
+      <div id='wait-container' style='display:none;'>
+         <h1>Wait for others to finish</h1>
+         <button type='button' onclick='alert("sike bitch")'>Resubmit</button>
+      </div>
+
+      <div id='game-over-screen' style='display:none;height:400px;width:500px;overflow:auto;background-color:#BDD0C3;'>
+         <canvas id='game-over-canvas'></canvas>
+      </div>
+
+      <div id='lobby-wait-screen'>
+         <button style='display:none' onclick='startGame()'>Start Game</button>
+         <h1>Game has not started yet</h1>
+      </div>
+
+      <div class="fs-container" style='display:none'>
+         <h1 id='what-to-draw-words'>Draw x:</h1>
+         <h1 id='draw-timer'>Time left: 00</h1>
+         <div id='lc-tools-container'>
+            <button type='button' id='tool-pencil' style='background-color:yellow'>Pencil</button>
+            <button type='button' id='tool-eraser' style='background-color:black'>Eraser</button>
+            <button type='button' onclick='submitDrawing()'>Submit drawing</button>
+         </div>
+         <div id="lc"></div>
+      </div>
+
+      <form id='guess_form' onsubmit="return submitGuess(document.getElementById('guess_form_text').value)" action="" style='display:none'>
+         <h1>Pick a word or phrase to draw:</h1><br>
+         <img id='guess-image'><br>
+         <input id='guess_form_text' type='text' maxlength='40'><br>
+         <input type='submit' value='Submit'><br>
+         <h1 id='guess-timer'>seconds left</h1>
+      </form>
+   </div>
+
+   <div class='footer'>
+      <div id='player-avatar-container'>
+         <img src='/images/avatar.png' style='height:8%; float:left'>
+
+         <button id='create-room-button' type="button" style='float:right' onclick="
+         document.getElementById('create-room-button').style.display = 'none';
+         document.getElementById('create-room-form').style.display = 'block';">Create Custom Match</button>
+         <form id='create-room-form' style='display:none; float:right' onsubmit='return createRoom()' action=''>
+            <input type='text' name='room-name' maxlength='20'><br>
+            <input type='submit' value='Create Room'><br>
+         </form>
+
+         <button id='join-room-button' type="button" style='float:right' onclick="
+         document.getElementById('join-room-button').style.display = 'none';
+         document.getElementById('join-room-form').style.display = 'block';">Join Custom Match</button>
+         <form id='join-room-form' style='display:none; float:right' onsubmit='return joinRoom()' action=''>
+            <input type='text' name='room-name'><br>
+            <input type='submit' value='Join Room'><br>
+         </form>
+         <button id='leave-room-button' style='display:none' onclick='leaveRoom()'>Leave Room</button>
+      </div>
+      <div id='lobby-screen'>
+
+         <p id='lobby-text'>You're not currently in a lobby</p>
+
+         <ul id='lobby-player-list' style='display:none;'>
+            <li id='lobby-player-list-you'><div class='center-container'><div class='centered'>You</div><img src='/images/avatar.png' style='width:50px;'></div></li>
+         </ul>
+      </div>
+      <div id='ad_box'>
+      </div>
+   </div>
+</body>
+</html>
