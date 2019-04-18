@@ -115,6 +115,8 @@ io.on('connection', function(socket) {
 		let roomName = data.roomName.slice(0, 20);
     if (rooms.get(roomName) != null) {
       joinRoom(socket, roomName, "Unnamed", false);
+    } else {
+      socket.emit("failed_room_join", "Room doesn't exist");
     }
 		
 	});
@@ -145,7 +147,7 @@ io.on('connection', function(socket) {
 				setTimeout(() => {
 					console.log('timer went off');
 					finishGameTurn(socket, room);
-				}, options.timer * 60000 + 3500); //Timer in minutes, add 3.5 seconds
+				}, options.timer * 60000 * 2 + 3500); //Timer in minutes, add 3.5 seconds for ping
 			}
 		}	
 	});

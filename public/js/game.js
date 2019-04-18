@@ -11,6 +11,7 @@ var finishGameData;
 var finishGameDataArray;
 var timer;
 var testingVariable;
+//TODO: fix timer counting from 60 not 59
 socket.on('join_room_success', function(data) {
    //Check if in a room already
    //Manages for people who direct connect
@@ -326,14 +327,14 @@ function startGame() {
 }
 
 function myTimer(id, startingMinutes) {
-   var minutes = startingMinutes - 1;
-   var seconds = 60;
-
+   var minutes = startingMinutes;
+   var seconds = 0;
+   document.getElementById(id).innerHTML = `${minutes}:0${seconds}`;
    timer =  setInterval(function () {
       seconds--;
       if (seconds < 0) {
          minutes--;
-         seconds = 60;
+         seconds = 59;
       }
       if (minutes < 0) {
          clearInterval(timer);
@@ -345,7 +346,12 @@ function myTimer(id, startingMinutes) {
          return;
       }
 
-      document.getElementById(id).innerHTML = `${minutes}:${seconds}`;
+      if (seconds < 10) {
+         document.getElementById(id).innerHTML = `${minutes}:0${seconds}`;
+      } else {
+         document.getElementById(id).innerHTML = `${minutes}:${seconds}`;
+      }
+      
 
    }, 1000);
 }
