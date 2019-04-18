@@ -20,13 +20,21 @@ class Room {
 		book[book.length - 1] = data;
 	}
 
+	/**
+	 * Submits data for a given player to the room
+	 * Handles if the player has already submit and just overwrites
+	 */
 	submitData(socketID, data) {
-		//TODO: make this actually an object added
-		//this way we can keep track of who drew what
+		//Handle game not started
+		if (this._round == 0) {
+			return;
+		}
+		//Gets who submitted it
 		let playerSubmitted = this._players.get(socketID);
+		//gets the player book to put data on
 		let id = playerSubmitted.playersBookId;
-		if (hasSubmitted(socketID)) {
-			this._updateData(id, [playerSubmitted.name, data])
+		if (this._hasSubmitted(socketID)) {
+			this._updateData(id, [playerSubmitted.name, data]);
 		} else {
 			this._addData(id, [playerSubmitted.name, data]);
 		}
@@ -173,16 +181,14 @@ class Room {
 		this._players.forEach(function(player, socketID, map) {
 			player.resetBook();
 		});
-		//Set round to 0
 	}
-	hasSubmitted(socketID) {
-		//TODO: Implement this
-		return false;
-	}
-	_resubmit(socketID, data) {
-		let playerSubmitted = this._players.get(socketID);
-		let id = playerSubmitted.playersBookId;
-		this._addData(id, [playerSubmitted.name, data]);
+
+	_hasSubmitted(socketID) {
+		let id = this._players.get(socketID).playersBookId;
+		let book = this._players.get(id).book;
+		if (this._round == 1) {
+			return book.length == 2;
+		} else return book.length == this._round + 1;
 	}
 }
 

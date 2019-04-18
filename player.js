@@ -11,5 +11,6 @@ class Player {
 	
 	resetBook() {
 		this.book = [];
+		this.playersBookId = this.id;
 	}
 };

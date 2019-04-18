@@ -69,17 +69,12 @@ io.on('connection', function(socket) {
     if (roomName != null) {
       let room = rooms.get(roomName);
       //Verify a submission i
-      if (room.hasSubmitted(socket.id)) {
-        room.resubmit(socket, data);
-      }
-      else {
-        room.submitData(socket.id, data);
+      room.submitData(socket.id, data);
         //check if round is over
         if (room.isRoundDone()) {
-        finishGameTurn(socket, room);
+          finishGameTurn(socket, room);
         }
-      }
-      
+        
     }
 
   });
@@ -87,7 +82,6 @@ io.on('connection', function(socket) {
 		console.log("player submitted a drawing");
     	//Check if room is finished
     	//Log data
-    	//TODO: handle submission when round is already over
       //TODO: Handle not actual drawing data
     	let roomName = Object.keys(socket.rooms)[1];
       if (roomName != null) {
@@ -100,6 +94,11 @@ io.on('connection', function(socket) {
       }
     });
 	socket.on("create_room_request", function(data) {
+      //check if already in room
+      if (Object.keys(socket.rooms)[1] != null) {
+        return;
+      }
+
     	//Check if room is already created
     	let roomName = data.roomName;
     	if (rooms.get(roomName) == undefined) {
@@ -114,7 +113,10 @@ io.on('connection', function(socket) {
     });
 	socket.on("join_room_request", function(data){
 		let roomName = data.roomName.slice(0, 20);
-		joinRoom(socket, roomName, "Unnamed", false);
+    if (rooms.get(roomName) != null) {
+      joinRoom(socket, roomName, "Unnamed", false);
+    }
+		
 	});
 	socket.on("disconnect", function() {
 		leaveRoom(socket);
