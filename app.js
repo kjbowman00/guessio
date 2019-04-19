@@ -37,7 +37,7 @@ var rooms = new Map();
 io.on('connection', function(socket) {
 	socket.on('play_game', function(data) {
    		//Assign user to lowest non-full room
-   		data = data.slice(0, 15);
+   		data = data.slice(0, 25);
    		let roomName = Object.keys(socket.rooms)[1];
    		if (roomName == undefined) {
    			//User not in a room yet

@@ -20,7 +20,7 @@
    <div id='menu'>
       <form id='name_form' onsubmit="return playGame()" action="">
          Enter a name:<br>
-         <input id='name_form_text' type='text' name='Name:' maxlength='15'><br>
+         <input id='name_form_text' type='text' name='Name:' maxlength='25'><br>
          <input type='submit' value='Play'><br>
       </form>
       <button type="button">Settings</button>
@@ -56,7 +56,7 @@
       <form id='guess_form' onsubmit="return submitGuess(document.getElementById('guess_form_text').value)" action="" style='display:none'>
          <h1>Pick a word or phrase to draw:</h1><br>
          <img id='guess-image'><br>
-         <input id='guess_form_text' type='text' maxlength='40'><br>
+         <input id='guess_form_text' type='text' maxlength='256'><br>
          <input type='submit' value='Submit'><br>
          <h1 id='guess-timer'>seconds left</h1>
       </form>
