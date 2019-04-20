@@ -6,6 +6,7 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 const Room = require('./room.js');
 const DEFAULT_OPTIONS = {};
+
 ///////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
@@ -72,7 +73,7 @@ io.on('connection', function(socket) {
       room.submitData(socket.id, data);
         //check if round is over
         if (room.isRoundDone()) {
-          finishGameTurn(socket, room);
+          finishGameTurn(room);
         }
         
     }
@@ -89,7 +90,7 @@ io.on('connection', function(socket) {
         room.submitData(socket.id, data);
 
         if (room.isRoundDone()) {
-          finishGameTurn(socket, room);
+          finishGameTurn(room);
         }
       }
     });
@@ -134,22 +135,11 @@ io.on('connection', function(socket) {
 		console.log(room.host);
 		if (roomName !== undefined && !room.publicGame && room.host == socket.id) {
 			//Depends on room options
-			room.startGame();
+			room.startGame(this);
 			let options = room.options;
-			if (options.timer == 0) {
-				//No timer needed
-				//Socket emissions will handle round ending
-			} else {
-				//Start a timer
-				//Emit first
-				socket.to(roomName).emit('game_start', options);
-				socket.emit('game_start', options);
-				setTimeout(() => {
-					console.log('timer went off');
-					finishGameTurn(socket, room);
-				}, options.timer * 60000 * 2 + 3500); //Timer in minutes, add 3.5 seconds for ping
-			}
-		}	
+			socket.to(roomName).emit('game_start', options);
+      socket.emit('game_start', options);
+    }	
 	});
 });
 ////////////////////////////////////////////////////////////////////////////
@@ -185,20 +175,19 @@ function joinRoom(socket, roomName, playerName, publicGame) {
 	});
 }
 
-function finishGameTurn(socket, room) {
+//TODO: This should probably be refactored into the room.js
+function finishGameTurn(room) {
 	//Pass books to each person
 	console.log('Round finished. Starting next one');
   	//Update any books that receieved no submission with blanks
-  	let gameOver = room.endRound();
+  	let gameOver = room.endRound(this);
   	let playersBooks = room.playersBooks();
   	//Send updated book information to players
   	if (gameOver) {
   		// so that they may display it
   		//saveToFile(room.roomName, room.playersBooks());
   		console.log(playersBooks);
-      console.log(socket.rooms);
   		io.in(room.roomName).emit('game_end', JSON.stringify(Array.from(playersBooks)));
-      console.log(socket.rooms);
   		//reset room
   		room.resetRoom();
   		//if public lobby set a timer to reset game

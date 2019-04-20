@@ -6,8 +6,23 @@ class Room {
 		this._publicGame = publicGame;
 		this._options = options;
 		this._round = 0;
+		this._timer = null;
 
 		this._players = new Map();
+	}
+
+	_clearRoundTimer() {
+		clearTimeout(this._timer);
+	}
+
+	/**
+	 * starts the timer for the round
+	 * Do 
+	 */
+	_startRoundTimer(app) {
+		this._timer = setTimeout(() => {
+			app.finishGameTurn(this);
+		}, this._options.timer * 60000 + 3500);
 	}
 
 	//TODO: implement addData() method
@@ -41,7 +56,8 @@ class Room {
 		
 	}
 
-	endRound() {
+	endRound(app) {
+		this._clearRoundTimer();
 		let playersPlaying = this.playersPlaying();
 		let numPlayers = playersPlaying.length;
 		//i represents player position in the map
@@ -76,7 +92,10 @@ class Room {
 			return true;
 			//this.resetRoom();
 			//this.startGame();
-		} else return false;
+		} else {
+			this._startRoundTimer(app);
+			return false;
+		}
 	}
 
 	isRoundDone() {
@@ -88,11 +107,14 @@ class Room {
 		return value;
 	}
 
-	startGame() {
+	startGame(app) {
 		this._round = 1;
 		this._players.forEach((player, socketID, map) => {
 			player.playing = true;
 		});
+		this._options.timer *= 2;
+		this._startRoundTimer(app);
+		this._options.timer /= 2;
 	}
 
 	playersPlaying() {
