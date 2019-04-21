@@ -99,8 +99,8 @@ socket.on('game_end', function (data) {
 
    //For temporary testing just show game over
    let canvas = document.getElementById("game-over-canvas");
+   canvas.width = 550;
    canvas.height = getHeightForRound(finishGameDataArray.length +2) - 1;
-   canvas.width = 500;
    document.getElementById('game-over-screen').style.display = 'block';
    bookTimer(0);
    //Download previous game button available
@@ -196,7 +196,7 @@ function setupCanvas(data) {
 
    lc = LC.init(
       document.getElementById("lc"),
-      {imageURLPrefix: '/images/drawing-board',
+      {imageURLPrefix: '/images/drawing-board',imageSize: {width: 550, height: 400},
       tools: [LC.tools.Pencil, LC.tools.Eraser, LC.tools.Eyedropper]
    }
    );
@@ -276,7 +276,7 @@ function submitGuess(guess) {
 function submitDrawing() {
    //emit an event and send the
    //image data of the canvas
-   socket.emit('drawing_submit', lc.getImage({rect: {x:0,y:0,width:500, height: 300}}).toDataURL());
+   socket.emit('drawing_submit', lc.getImage({rect: {x:0,y:0,width:550, height:400}}).toDataURL());
    clearInterval(timer);
 
    //Display wait for everyone to finish drawing/guessing
@@ -382,7 +382,7 @@ function bookTimer(bookIndex) {
       document.getElementById('game-over-screen').scrollTo(0,0);
       setTimeout(function() {
          bookTimer(bookIndex+1);
-      }, 5000+ 2500*finishGameDataArray.length);
+      }, 5000+ 5000*finishGameDataArray.length);
    } else {
       //We've drawn all the books go ahead and change to wait screen
       document.getElementById('game-over-screen').style.display = 'none';
@@ -392,8 +392,8 @@ function bookTimer(bookIndex) {
 
 function drawBook(bookIndex) {
    let book = finishGameDataArray[bookIndex][1];
-   const WIDTH = 500;
-   const HEIGHT = 300;
+   const WIDTH = 550;
+   const HEIGHT = 400;
    let GUESS_HEIGHT = 100;
    let canvas = document.getElementById("game-over-canvas");
    canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
@@ -429,7 +429,7 @@ function drawBook(bookIndex) {
 
 function getHeightForRound(i) {
    //Height will change depending on guess round or draw
-   let HEIGHT = 300;
+   let HEIGHT = 400;
    let GUESS_HEIGHT = 100;
    if (isGuessRound(i)) {
       return i*HEIGHT/2 + i*GUESS_HEIGHT/2 + i;
