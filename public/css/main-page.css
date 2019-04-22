@@ -1,70 +1,80 @@
 body {
-      background-image: url("/images/newcircles.png");
-      background-repeat: repeat;
-   }
-   #menu {
-      background-color: gray;
-      width: 200px;
-      height: 250px;
-      margin: auto;
-      background-color: #BDD0C3;
-      border-color: black;
-      border-style: solid;
-      border-width: 2px;
-      border-radius: 3px;
-   }
-   #lc-tools-container {
-      background-color: #BDD0C3;
-      width: 548px;
-      height: 60px;
-      border-color: black;
-      border-style: solid;
-      border-width: 2px;
-      margin: auto;
-   }
-   #lobby-screen ul{
-      list-style:none;
-   }
-   #lobby-screen p{
-      padding:0px;
-      margin:0px;
-   }
-   #player-avatar-container{
-      float:left;
-      padding:15px;
-      border-color:black;
-      border-style: solid;
-      border-width: 2px;
-   }
-   .fs-container {
-      width:550px;
-      height:400px;
-      margin: auto;
-   }
-   .literally {
-      width: 100%;
-      height: 100%;
-      position: relative;
-   }
-   .centered {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-   }
-   .center-container {
-      position: relative;
-      text-align: center;
-   }
-   .footer {
-      position: fixed;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      background-color: #BDD0C3;
-      text-align: center;
-      padding:10px;
-      border-top-color:black; 
-      border-top-style:solid;
-      border-top-size:2px;  
-   }
+    background-image: url("/images/newcircles.png");
+    background-repeat: repeat;
+}
+
+#menu {
+    background-color: gray;
+    width: 200px;
+    height: 250px;
+    margin: auto;
+    background-color: #BDD0C3;
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 3px;
+}
+
+#lc-tools-container {
+    background-color: #BDD0C3;
+    width: 548px;
+    height: 60px;
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
+    margin: auto;
+}
+
+#lobby-screen ul {
+    list-style: none;
+}
+
+#lobby-screen p {
+    padding: 0px;
+    margin: 0px;
+}
+
+#player-avatar-container {
+    float: left;
+    padding: 15px;
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
+}
+
+.fs-container {
+    width: 550px;
+    height: 400px;
+    margin: auto;
+}
+
+.literally {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.center-container {
+    position: relative;
+    text-align: center;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #BDD0C3;
+    text-align: center;
+    padding: 10px;
+    border-top-color: black;
+    border-top-style: solid;
+    border-top-size: 2px;
+}

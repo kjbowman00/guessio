@@ -1,132 +1,137 @@
-
 <!DOCTYPE html>
 <html>
+
 <body>
-	<canvas id='myCanvas' width='0' height='0' style='border:1px solid #000000;' hidden>
-	</canvas>
-	<img id='image'>
-	<script>
+    <canvas id='myCanvas' width='0' height='0' style='border:1px solid #000000;' hidden>
+    </canvas>
+    <img id='image'>
+    <script>
+    //TODO: hide canvas and display a png image of it instead at the end
+    const WIDTH = 550;
+    const HEIGHT = 400;
+    const GUESS_HEIGHT = 100;
+    var bigData = window.opener.finishGameData;
+    //dummy variable only bcz before had to process some stuff
+    //remove later maybe
+    var map = bigData;
+    var canvas = document.getElementById("myCanvas");
+    //Map should be mapped as such
+    // player's book socketID --> array
+    //array is a list of smaller arrays
+    //array should be formed as array[i] = [who drew/guessed, the guess/draw data]
 
-		//TODO: hide canvas and display a png image of it instead at the end
-		const WIDTH = 500;
-		const HEIGHT = 300;
-		const GUESS_HEIGHT = 100;
-		var bigData = window.opener.finishGameData;
-		//dummy variable only bcz before had to process some stuff
-		//remove later maybe
-		var map = bigData;
-		var canvas = document.getElementById("myCanvas");
-		//Map should be mapped as such
-		// player's book socketID --> array
-		//array is a list of smaller arrays
-		//array should be formed as array[i] = [who drew/guessed, the guess/draw data]
+    let bookNum = 0;
 
-		let bookNum = 0;
+    //setup canvas size
+    let keys = Array.from(map.keys());
+    let width = keys.length * WIDTH + keys.length - 1;
+    let bookLength = map.get(keys[0]).length;
+    let height = getHeightForRound(bookLength);
+    var numDrawsGuesses = 0;
+    var expectedDrawsGuesses = bookLength * keys.length;
+    canvas.width = width;
+    canvas.height = height;
 
-		//setup canvas size
-		let keys = Array.from(map.keys());
-		let width = keys.length*WIDTH + keys.length-1;
-		let bookLength = map.get(keys[0]).length;
-		let height = getHeightForRound(bookLength);
-		var numDrawsGuesses = 0;
-		var expectedDrawsGuesses = bookLength*keys.length;
-		canvas.width = width;
-		canvas.height = height;
+    map.forEach((book, socketID, map) => {
+        let bookWidth = getWidthForBookNum(bookNum);
+        //Draw a vertical line from top to bottom
+        //round i = 0, is actually just round 1
+        //also i = 1, is still round 1 but just the draw part
+        //i doesn't exactly represent round number
+        drawLine(bookWidth, 0, bookWidth, height);
+        for (let i = 0; i < book.length; i++) {
+            let roundHeight = getHeightForRound(i);
+            //Draw a horizontal line
+            drawLine(0, roundHeight, canvas.width, roundHeight);
+            let array = book[i];
 
-		map.forEach((book, socketID, map) => {
-			let bookWidth = getWidthForBookNum(bookNum);
-			//Draw a vertical line from top to bottom
-			//round i = 0, is actually just round 1
-			//also i = 1, is still round 1 but just the draw part
-			//i doesn't exactly represent round number
-			drawLine(bookWidth,0,bookWidth,height);
-			for (let i = 0; i < book.length; i++) {
-				let roundHeight = getHeightForRound(i);
-				//Draw a horizontal line
-				drawLine(0, roundHeight, canvas.width, roundHeight);
-				let array = book[i];
+            let name = array[0];
+            let data = array[1];
 
-				let name = array[0];
-				let data = array[1];
+            if (isGuessRound(i)) {
+                numDrawsGuesses++;
+                writeText(name, bookWidth + 5, roundHeight + 5, false);
+                writeText(data, bookWidth + WIDTH / 2, roundHeight + GUESS_HEIGHT / 2, true);
+            } else {
+                writeText(name, bookWidth + 5, roundHeight + 5, false);
 
-				if (isGuessRound(i)) {
-					numDrawsGuesses++;
-					writeText(name, bookWidth + 5, roundHeight + 5, false);
-					writeText(data, bookWidth + WIDTH/2, roundHeight + GUESS_HEIGHT/2, true);
-				} else {
-					writeText(name, bookWidth+5, roundHeight + 5, false);
-					
-					let image = new Image();
-					image.onload = function() {
-						let centerX = bookWidth + WIDTH/2 - image.width/2;
-						let centerY = roundHeight + HEIGHT/2 - image.height/2;
-						let ctx = canvas.getContext("2d");
-						ctx.drawImage(image, centerX, centerY);
-						numDrawsGuesses++;
-						if (numDrawsGuesses == expectedDrawsGuesses) {
-							console.log("DPERROIJER");
-							makeImage();
-						}
-					};
-					image.src = data;
-					
-				}
-			}
+                let image = new Image();
+                image.onload = function() {
+                    let centerX = bookWidth + WIDTH / 2 - image.width / 2;
+                    let centerY = roundHeight + HEIGHT / 2 - image.height / 2;
+                    let ctx = canvas.getContext("2d");
+                    ctx.drawImage(image, centerX, centerY);
+                    numDrawsGuesses++;
+                    if (numDrawsGuesses == expectedDrawsGuesses) {
+                        console.log("DPERROIJER");
+                        makeImage();
+                    }
+                };
+                image.src = data;
 
-			bookNum++;
-			if (numDrawsGuesses == expectedDrawsGuesses) {
-				makeImage();
-			}
-		});
+            }
+        }
 
-		
-		function makeImage() {
-			document.getElementById("image").src = canvas.toDataURL();
-		}
-		function drawLine(startX, startY, endX, endY) {
-			let ctx = canvas.getContext("2d");
-			ctx.beginPath();
-			ctx.moveTo(startX, startY);
-			ctx.lineTo(endX, endY);
-			ctx.stroke();
-		}
-		function isGuessRound(n) {
-			//If even round, then guess round
-			return n % 2 == 0;
-		}
-		function writeText(text, x, y, centered) {
+        bookNum++;
+        if (numDrawsGuesses == expectedDrawsGuesses) {
+            makeImage();
+        }
+    });
 
-			let ctx = canvas.getContext("2d");
-			if (centered) {
-				ctx.textAlign = "center";
-			} else {
-				ctx.textAlign = "left";
-			}
-			ctx.font = "20px Comic Sans MS";
-			ctx.fillText(text, x, y+20); 
-		}
-		function getWidthForBookNum(bookNum) {
-			//i=0  > 0
-			//i=1 > WIDTH +1
-			//i=2 > 2WIDTH + 2
-			return bookNum + bookNum*WIDTH;
-		}
-		function getHeightForRound(i) {
-			//Height will change depending on guess round or draw
-			if (isGuessRound(i)) {
-				return i*HEIGHT/2 + i*GUESS_HEIGHT/2 + i;
-				//0 > 0
-				//2 > H + GH
-				//4 > 2H + 2GH
-			} else {
-				let numH = (i-1) / 2;
-				let numGH = i - numH;
-				return numH*HEIGHT + numGH*GUESS_HEIGHT;
-				//1 > GH
-				//3 > 2GH + H
-				//5 > 3GH + 2H
-			}
-		}
-	</script>
+
+    function makeImage() {
+        document.getElementById("image").src = canvas.toDataURL();
+    }
+
+    function drawLine(startX, startY, endX, endY) {
+        let ctx = canvas.getContext("2d");
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+    }
+
+    function isGuessRound(n) {
+        //If even round, then guess round
+        return n % 2 == 0;
+    }
+
+    function writeText(text, x, y, centered) {
+
+        let ctx = canvas.getContext("2d");
+        if (centered) {
+            ctx.textAlign = "center";
+        } else {
+            ctx.textAlign = "left";
+        }
+        ctx.font = "20px Comic Sans MS";
+        ctx.fillText(text, x, y + 20);
+    }
+
+    function getWidthForBookNum(bookNum) {
+        //i=0  > 0
+        //i=1 > WIDTH +1
+        //i=2 > 2WIDTH + 2
+        return bookNum + bookNum * WIDTH;
+    }
+
+    function getHeightForRound(i) {
+        //Height will change depending on guess round or draw
+        if (isGuessRound(i)) {
+            return i * HEIGHT / 2 + i * GUESS_HEIGHT / 2 + i;
+            //0 > 0
+            //2 > H + GH
+            //4 > 2H + 2GH
+        } else {
+            let numH = (i - 1) / 2;
+            let numGH = i - numH;
+            return numH * HEIGHT + numGH * GUESS_HEIGHT;
+            //1 > GH
+            //3 > 2GH + H
+            //5 > 3GH + 2H
+        }
+    }
+    </script>
 </body>
+
 </html>
