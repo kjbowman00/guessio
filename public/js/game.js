@@ -310,6 +310,7 @@ function playerJoined(id, name, avatar, append) {
 function playerLeft(id) {
     let element = players.get(id);
     element.parentElement.removeChild(element);
+    players.delete(id);
 }
 
 function isEmpty(obj) {
@@ -356,6 +357,8 @@ function myTimer(id, startingMinutes) {
 }
 
 function leaveRoom() {
+   document.getElementById('menu').style.display = "block";
+    document.getElementById('game_screen').style.display = "none";
     document.getElementById('create-room-button').style.display = 'block';
     document.getElementById('join-room-button').style.display = 'block';
     document.getElementById('leave-room-button').style.display = 'none';
@@ -367,9 +370,10 @@ function leaveRoom() {
     //hide it
     document.getElementById('lobby-text').innerHTML = "You are not currently in a lobby!";
     let list = document.getElementById('lobby-player-list');
-    for (let i = list.length - 1; i > 0; i--) {
-        list.removeChild(list.children[i]);
-    }
+    players.forEach((listElement, playerID, map) => {
+      list.removeChild(listElement);
+    });
+    players.clear();
     list.style.display = 'none';
 
     socket.emit('leave_room', "");
