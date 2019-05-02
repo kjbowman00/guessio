@@ -26,16 +26,16 @@
         <script>//Manage direct room connect</script>
     </div>
     <div id='game_screen' style="display:none;">
-        <div id='wait-container' style='display:none;'>
+        <div id='wait-container'>
             <h1>Wait for others to finish</h1>
             <button type='button' onclick='alert("sike bitch")'>Resubmit</button>
         </div>
-        <div id='game-over-screen' style='display:none;height:400px;width:570px;overflow:auto;background-color:#BDD0C3;'>
+        <div id='game-over-screen' style='display:none;height:400px;width:570px;overflow:auto;background-color:#BDD0C3;margin:auto;'>
             <canvas id='game-over-canvas'></canvas>
         </div>
         <div id='lobby-wait-screen'>
-            <button style='display:none' onclick='startGame()'>Start Game</button>
-            <h1>Game has not started yet</h1>
+            <button style='display:none; margin:auto;' onclick='startGame()'>Start Game</button>
+            <h1 style='margin:auto;text-align: center;'>Game has not started yet</h1>
         </div>
         <div class="fs-container" style='display:none'>
             <h1 id='what-to-draw-words'>Draw x:</h1>
@@ -48,11 +48,15 @@
             <div id="lc"></div>
         </div>
         <form id='guess_form' onsubmit="return submitGuess(document.getElementById('guess_form_text').value)" action="" style='display:none'>
-            <h1>Pick a word or phrase to draw:</h1><br>
-            <img id='guess-image'><br>
-            <input id='guess_form_text' type='text' maxlength='180'><br>
-            <input type='submit' value='Submit'><br>
-            <h1 id='guess-timer'>seconds left</h1>
+            <div id='guess-image-box'>
+               <img id='guess-image' style='margin:auto'>
+            </div>
+            <div id="guess-box">
+               <h1>Pick a word or phrase to draw:</h1>
+               <input id='guess_form_text' type='text' maxlength='180'>
+               <input type='submit' value='Submit'>
+               <h1 id='guess-timer'>seconds left</h1>
+            </div>
         </form>
     </div>
     <div class='footer'>
