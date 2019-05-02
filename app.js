@@ -6,6 +6,8 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 const Room = require('./room.js');
 const DEFAULT_OPTIONS = {};
+//Gets around issue of this being overridden in callback functions
+var _this = this;
 
 ///////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
@@ -135,7 +137,7 @@ io.on('connection', function(socket) {
         console.log(room.host);
         if (roomName !== undefined && !room.publicGame && room.host == socket.id) {
             //Depends on room options
-            room.startGame(this);
+            room.startGame(_this);
             let options = room.options;
             socket.to(roomName).emit('game_start', options);
             socket.emit('game_start', options);
@@ -180,7 +182,7 @@ function finishGameTurn(room) {
     //Pass books to each person
     console.log('Round finished. Starting next one');
     //Update any books that receieved no submission with blanks
-    let gameOver = room.endRound(this);
+    let gameOver = room.endRound(_this);
     let playersBooks = room.playersBooks();
     //Send updated book information to players
     if (gameOver) {
