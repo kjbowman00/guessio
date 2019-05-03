@@ -64,14 +64,16 @@
             <img src='/images/avatar.png' style='height:8%; float:left'>
             <button id='create-room-button' type="button" style='float:right' onclick="
          document.getElementById('create-room-button').style.display = 'none';
-         document.getElementById('create-room-form').style.display = 'block';">Create Custom Match</button>
+         document.getElementById('create-room-form').style.display = 'block';
+         document.getElementById('create-room-form').children[0].focus();">Create Custom Match</button>
             <form id='create-room-form' style='display:none; float:right' onsubmit='return createRoom()' action=''>
                 <input type='text' name='room-name' maxlength='20'><br>
                 <input type='submit' value='Create Room'><br>
             </form>
             <button id='join-room-button' type="button" style='float:right' onclick="
          document.getElementById('join-room-button').style.display = 'none';
-         document.getElementById('join-room-form').style.display = 'block';">Join Custom Match</button>
+         document.getElementById('join-room-form').style.display = 'block';
+         document.getElementById('join-room-form').children[0].focus();">Join Custom Match</button>
             <form id='join-room-form' style='display:none; float:right' onsubmit='return joinRoom()' action=''>
                 <input type='text' name='room-name'><br>
                 <input type='submit' value='Join Room'><br>

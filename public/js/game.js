@@ -166,18 +166,21 @@ function setupGuess(data) {
     document.getElementById('lobby-wait-screen').style.display = 'none';
     let guessBox = document.getElementById('guess-box');
     let guessForm = document.getElementById('guess_form');
+    guessForm.reset();
     guessForm.style.display = 'flex';
 
     let guessImageBox = document.getElementById('guess-image-box');
     if (firstRound) {
         guessImageBox.style.display = 'none';
         guessBox.children[0].innerHTML = "Pick a word/phrase to draw!";
+        guessBox.children[1].focus();
     } else {
         //data[0] is the player name who drew the thing
         let imageData = data[1];
         guessImageBox.style.display = 'block';
         guessImageBox.children[0].src = imageData;
         guessBox.children[0].innerHTML = "Guess what the other user drew!";
+        guessBox.children[1].focus();
     }
     myTimer('guess-timer', roomOptions.timer);
 }
