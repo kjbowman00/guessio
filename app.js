@@ -215,6 +215,7 @@ function leaveRoom(socket) {
         playerRoomNames.delete(socket.id);
         socket.leave(roomName);
         if (room.playerCount == 0) {
+            room.clearRoundTimer();
             rooms.delete(roomName);
         }
     }

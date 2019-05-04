@@ -11,7 +11,7 @@ class Room {
 		this._players = new Map();
 	}
 
-	_clearRoundTimer() {
+	clearRoundTimer() {
 		clearTimeout(this._timer);
 	}
 
@@ -57,7 +57,7 @@ class Room {
 	}
 
 	endRound(app) {
-		this._clearRoundTimer();
+		this.clearRoundTimer();
 		let playersPlaying = this.playersPlaying();
 		let numPlayers = playersPlaying.length;
 		//i represents player position in the map
@@ -199,6 +199,7 @@ class Room {
 
 	resetRoom() {
 		this._round = 0;
+		this.clearRoundTimer();
 		//Guesses and drawings should be emptied
 		this._players.forEach(function(player, socketID, map) {
 			player.resetBook();

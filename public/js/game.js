@@ -345,7 +345,7 @@ function myTimer(id, startingMinutes) {
             console.log("timer finished");
             //force submission
             if (wasGuessRound) {
-                submitGuess();
+                submitGuess(document.getElementById('guess_form_text').value);
             } else submitDrawing();
             return;
         }

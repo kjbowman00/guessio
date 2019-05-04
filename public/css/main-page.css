@@ -4,14 +4,20 @@ body {
 }
 
 #menu {
-    width: 200px;
-    height: 250px;
+    width: 300px;
+    height: 300px;
     margin: auto;
+    margin-top: 100px;
     background-color: #BDD0C3;
     border-color: black;
     border-style: solid;
     border-width: 2px;
     border-radius: 3px;
+}
+
+#menu form h1 {
+   margin:auto;
+   text-align: center;
 }
 
 #lc-tools-container {
