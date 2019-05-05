@@ -206,6 +206,13 @@ function setupCanvas(data) {
         }
     );
 
+    lc.on("toolChange", function(tool) {
+      updateBrushSize();
+      if (tool.name == 'pencil') {
+         updateBrushColor();
+      }
+    });
+
     var tools = [{
             name: 'pencil',
             el: document.getElementById('tool-pencil'),
@@ -525,4 +532,16 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight, centered) {
         }
     }
     ctx.fillText(line, x, y);
+}
+
+function updateBrushSize() {
+   if (this.value != undefined) {
+      lc.tool.strokeWidth = parseInt(this.value);
+   } else {
+      lc.tool.strokeWidth = parseInt(document.getElementById("brush-slider").value);
+   }
+}
+
+function updateBrushColor() {
+
 }

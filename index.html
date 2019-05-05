@@ -43,6 +43,9 @@
             <div id='lc-tools-container'>
                 <button type='button' id='tool-pencil' style='background-color:yellow'>Pencil</button>
                 <button type='button' id='tool-eraser' style='background-color:black'>Eraser</button>
+                <div class="slidecontainer" style="margin:auto;float:right">
+                  <input type="range" min="1" max="25" value="5" class="slider" id="brush-slider" oninput="updateBrushSize()">
+                </div>
                 <button type='button' onclick='submitDrawing()'>Submit drawing</button>
             </div>
             <div id="lc"></div>
