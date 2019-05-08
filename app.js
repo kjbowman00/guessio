@@ -134,7 +134,6 @@ io.on('connection', function(socket) {
         let roomName = Object.keys(socket.rooms)[1];
         let room = rooms.get(roomName);
         console.log("Game starting:" + roomName);
-        console.log(room.host);
         if (roomName !== undefined && !room.publicGame && room.host == socket.id) {
             //Depends on room options
             room.startGame(_this);

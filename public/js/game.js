@@ -11,6 +11,9 @@ var finishGameData;
 var finishGameDataArray;
 var timer;
 var testingVariable;
+var brushEllipse;
+
+var tempRemoveLater;
 //TODO: fix timer counting from 60 not 59
 socket.on('join_room_success', function(data) {
     //Check if in a room already
@@ -206,12 +209,22 @@ function setupCanvas(data) {
         }
     );
 
+    brushEllipse = LC.createShape('Ellipse', {x:-50, y:-50, width:25, height:25, strokeWidth:1, strokeColor:"transparent", fillColor:"hsla(0, 0%, 50%, 0.5)"});
     lc.on("toolChange", function(tool) {
       updateBrushSize();
       if (tool.name == 'pencil') {
          updateBrushColor();
       }
     });
+
+    let lcBox = document.getElementById("lc");
+    lc.setShapesInProgress([brushEllipse]);
+    document.onpointermove = (event) => {
+         brushEllipse.x = event.x - lcBox.offsetLeft - (lc.tool.strokeWidth)/2;
+         brushEllipse.y = event.y - lcBox.offsetTop - (lc.tool.strokeWidth)/2;
+         lc.drawShapeInProgress(brushEllipse);
+      
+    };
 
     var tools = [{
             name: 'pencil',
@@ -536,9 +549,17 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight, centered) {
 
 function updateBrushSize() {
    if (this.value != undefined) {
-      lc.tool.strokeWidth = parseInt(this.value);
+      let value = parseInt(this.value);
+      lc.tool.strokeWidth = value;
+      brushEllipse.width = value;
+      brushEllipse.height = value;
+      lc.drawShapeInProgress(brushEllipse);
    } else {
-      lc.tool.strokeWidth = parseInt(document.getElementById("brush-slider").value);
+      let value = parseInt(document.getElementById("brush-slider").value);
+      lc.tool.strokeWidth = value;
+      brushEllipse.width = value;
+      brushEllipse.height = value;
+      lc.drawShapeInProgress(brushEllipse);
    }
 }
 

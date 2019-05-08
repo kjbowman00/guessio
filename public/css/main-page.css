@@ -22,7 +22,6 @@ body {
 
 #lc-tools-container {
     background-color: #BDD0C3;
-    width: 548px;
     height: 60px;
     border-color: black;
     border-style: solid;
@@ -98,6 +97,12 @@ body {
     border-color: black;
     border-style: solid;
     border-width: 2px;
+}
+#lc {
+   border-color: black;
+   border-style: solid;
+   border-width: 2px;
+   border-top-width:0px;
 }
 
 .fs-container {
