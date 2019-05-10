@@ -30,26 +30,33 @@
             <h1>Wait for others to finish</h1>
             <button type='button' onclick='alert("sike bitch")'>Resubmit</button>
         </div>
-        <div id='game-over-screen' style='display:none;height:400px;width:570px;overflow:auto;background-color:#BDD0C3;margin:auto;'>
+        <div id='game-over-screen'>
             <canvas id='game-over-canvas'></canvas>
         </div>
         <div id='lobby-wait-screen'>
             <button style='display:none; margin:auto;' onclick='startGame()'>Start Game</button>
             <h1 style='margin:auto;text-align: center;'>Game has not started yet</h1>
         </div>
-        <div class="fs-container" style='display:none'>
-            <h1 id='what-to-draw-words'>Draw x:</h1>
-            <h1 id='draw-timer'>Time left: 00</h1>
-            <div id='lc-tools-container'>
-                <button type='button' id='tool-pencil' style='background-color:yellow'>Pencil</button>
-                <button type='button' id='tool-eraser' style='background-color:black'>Eraser</button>
-                <div class="slidecontainer" style="margin:auto;float:right">
-                  <input type="range" min="1" max="25" value="5" class="slider" id="brush-slider" oninput="updateBrushSize()">
-                </div>
-                <button type='button' onclick='submitDrawing()'>Submit drawing</button>
+        <div id="draw-container">
+         <div id="what-to-draw-container">
+               <h1 id='what-to-draw-words'>Draw x:</h1>
+               <h1 id='draw-timer'>Time left: 00</h1>
             </div>
-            <div id="lc"></div>
-        </div>
+          <div class="fs-container">
+            
+            
+            <div id='lc-tools-container'>
+              <button type='button' id='tool-pencil' style='background-color:yellow'>Pencil</button>
+              <button type='button' id='tool-eraser' style='background-color:black'>Eraser</button>
+              <div class="slidecontainer" style="margin:auto;float:right">
+               <input type="range" min="1" max="25" value="5" class="slider" id="brush-slider" oninput="updateBrushSize()">
+            </div>
+            <button type='button' onclick='submitDrawing()'>Submit drawing</button>
+         </div>
+         <div id="lc"></div>
+      </div>
+   </div>
+        
         <form id='guess_form' onsubmit="return submitGuess(document.getElementById('guess_form_text').value)" action="" style='display:none'>
             <div id='guess-image-box'>
                <img id='guess-image' style='margin:auto'>

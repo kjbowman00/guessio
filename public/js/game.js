@@ -90,7 +90,7 @@ socket.on('game_end', function(data) {
     finishGameData = new Map(JSON.parse(data));
     finishGameDataArray = Array.from(finishGameData);
     //Hide canvas and guess thing
-    document.getElementsByClassName('fs-container')[0].style.display = 'none';
+    document.getElementById("draw-container").style.display = 'none';
     document.getElementById('wait-container').style.display = 'none';
     document.getElementById('lobby-wait-screen').style.display = 'none';
     document.getElementById('guess_form').style.display = 'none';
@@ -164,7 +164,7 @@ function joinRoom() {
 
 function setupGuess(data) {
     wasGuessRound = true;
-    document.getElementsByClassName("fs-container")[0].style.display = 'none';
+    document.getElementById("draw-container").style.display = 'none';
     document.getElementById('wait-container').style.display = 'none';
     document.getElementById('lobby-wait-screen').style.display = 'none';
     let guessBox = document.getElementById('guess-box');
@@ -193,8 +193,7 @@ function setupCanvas(data) {
     console.log(data);
     //data[0] is who drew it
     wasGuessRound = false;
-    let fsContainer = document.getElementsByClassName("fs-container")[0];
-    fsContainer.style.display = 'block';
+    document.getElementById("draw-container").style.display = "flex";
     document.getElementById('guess_form').style.display = 'none';
     document.getElementById('wait-container').style.display = 'none';
     document.getElementById('lobby-wait-screen').style.display = 'none';
@@ -305,7 +304,7 @@ function submitDrawing() {
     //Display wait for everyone to finish drawing/guessing
     let waitContainer = document.getElementById("wait-container");
     waitContainer.style.display = "block";
-    document.getElementsByClassName('fs-container')[0].style.display = 'none';
+    document.getElementById("draw-container").style.display = 'none';
     if (wasGuessRound) {
         waitContainer.firstChild.value = "Wait for everyone to finish guessing!";
     } else {

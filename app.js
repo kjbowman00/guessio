@@ -187,7 +187,6 @@ function finishGameTurn(room) {
     if (gameOver) {
         // so that they may display it
         //saveToFile(room.roomName, room.playersBooks());
-        console.log(playersBooks);
         io.in(room.roomName).emit('game_end', JSON.stringify(Array.from(playersBooks)));
         //reset room
         room.resetRoom();

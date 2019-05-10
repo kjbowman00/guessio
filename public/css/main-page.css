@@ -98,11 +98,42 @@ body {
     border-style: solid;
     border-width: 2px;
 }
+#game-over-screen {
+   border-color: black;
+   border-style: solid;
+   border-width: 2px;
+   display:none;
+   height:400px;
+   width:570px;
+   overflow:auto;
+   background-color:#BDD0C3;
+   margin:auto;
+}
+
 #lc {
    border-color: black;
    border-style: solid;
    border-width: 2px;
    border-top-width:0px;
+}
+
+#draw-container {
+   display:none;
+   flex-direction: row;
+   justify-content: center;
+   width:1000px;
+   height: 500px;
+   margin:auto;
+}
+
+#what-to-draw-container {
+   width:400px;
+   height:400px;
+   border-color: black;
+   border-style: solid;
+   border-width: 2px;
+   background-color: #BDD0C3;
+   margin:auto;
 }
 
 .fs-container {
