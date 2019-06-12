@@ -7,6 +7,8 @@ class Room {
 		this._options = options;
 		this._round = 0;
 		this._timer = null;
+		this._gameOver = false;
+		this._numVotedPlayers = 0;
 
 		this._players = new Map();
 	}
@@ -89,6 +91,7 @@ class Room {
 			//TODO: save books
 			//possibly let app.js handle starting the game
 			console.log("GAME OVER");
+			this._gameOver = true;
 			return true;
 			//this.resetRoom();
 			//this.startGame();
@@ -110,11 +113,14 @@ class Room {
 	startGame(app) {
 		this._round = 1;
 		this._players.forEach((player, socketID, map) => {
+			player.votedNextBook = false;
 			player.playing = true;
 		});
 		this._options.timer *= 2;
 		this._startRoundTimer(app);
 		this._options.timer /= 2;
+		this._gameOver = false;
+		this._numVotedPlayers = 0;
 	}
 
 	playersPlaying() {
@@ -204,6 +210,7 @@ class Room {
 		this._players.forEach(function(player, socketID, map) {
 			player.resetBook();
 		});
+		this.resetVotes();
 	}
 
 	_hasSubmitted(socketID) {
@@ -212,6 +219,31 @@ class Room {
 		if (this._round == 1) {
 			return book.length == 2;
 		} else return book.length == this._round + 1;
+	}
+
+	get gameOver() {
+		return this._gameOver;
+	}
+
+	setPlayerVoted(socketID) {
+		let player = this._players.get(socketID);
+		if (!player.votedNextBook) {
+			player.votedNextBook = true;
+			this._numVotedPlayers += 1;
+		}
+	}
+
+	isVotingDone() {
+		console.log(this._numVotedPlayers);
+		console.log(this._players.size);
+		return this._numVotedPlayers >= this._players.size;
+	}
+
+	resetVotes() {
+		this._numVotedPlayers = 0;
+		this._players.forEach(function(player, socketID, map) {
+			player.votedNextBook = false;
+		});
 	}
 }
 

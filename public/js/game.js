@@ -13,6 +13,8 @@ var timer;
 var testingVariable;
 var brushEllipse;
 
+var bookShownNumber;
+
 var tempRemoveLater;
 //TODO: fix timer counting from 60 not 59
 socket.on('join_room_success', function(data) {
@@ -105,9 +107,16 @@ socket.on('game_end', function(data) {
     canvas.width = 550;
     canvas.height = getHeightForRound(finishGameDataArray.length + 2) - 1;
     document.getElementById('game-over-screen').style.display = 'block';
-    bookTimer(0);
+
+    bookShownNumber = 0;
+    bookTimer();
     //Download previous game button available
     document.getElementById('game-image-download').style.display = 'block';
+});
+socket.on('vote_book_finished', function() {
+    console.log("yo");
+    bookShownNumber++;
+    bookTimer();
 });
 
 function playGame() {
@@ -402,13 +411,11 @@ function leaveRoom() {
     socket.emit('leave_room', "");
 }
 
-function bookTimer(bookIndex) {
-    if (bookIndex < finishGameDataArray.length) {
-        drawBook(bookIndex);
-        document.getElementById('game-over-screen').scrollTo(0, 0);
-        setTimeout(function() {
-            bookTimer(bookIndex + 1);
-        }, 5000 + 5000 * finishGameDataArray.length);
+function bookTimer() {
+    if (bookShownNumber < finishGameDataArray.length) {
+        drawBook(bookShownNumber);
+        document.getElementById('game-over-scroller').scrollTo(0, 0);
+        document.getElementById("ready-for-book-image-button").style.display = "block";
     } else {
         //We've drawn all the books go ahead and change to wait screen
         document.getElementById('game-over-screen').style.display = 'none';
@@ -564,4 +571,15 @@ function updateBrushSize() {
 
 function updateBrushColor() {
 
+}
+
+function readyForBookImage() {
+    //TODO:Update avatar status
+
+
+    //Hide button to ready up (or make it green or something)
+    document.getElementById("ready-for-book-image-button").style.display = "none";
+
+    //Send info to server
+    socket.emit('next_book_ready');
 }

@@ -142,6 +142,21 @@ io.on('connection', function(socket) {
             socket.emit('game_start', options);
         }
     });
+    socket.on('next_book_ready', function() {
+        //check if in private room or not
+        console.log('hey');
+        let roomName = Object.keys(socket.rooms)[1];
+        let room = rooms.get(roomName);
+        if (roomName !== undefined && !room.publicGame && room.gameOver) {
+            room.setPlayerVoted(socket.id);
+            console.log("bigger hey");
+            if (room.isVotingDone()) {
+                //double called somehow
+                io.in(roomName).emit('vote_book_finished');
+                room.resetVotes();
+            }
+        }
+    });
 });
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////

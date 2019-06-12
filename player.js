@@ -7,6 +7,7 @@ module.exports =
             this.name = name;
             this.id = socketID;
             this.playing = playing;
+            this.votedNextBook = false;
         }
 
         resetBook() {

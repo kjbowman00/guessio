@@ -31,7 +31,10 @@
             <button type='button' onclick='alert("sike bitch")'>Resubmit</button>
         </div>
         <div id='game-over-screen'>
-            <canvas id='game-over-canvas'></canvas>
+            <div id='game-over-scroller'>
+                <canvas id='game-over-canvas'></canvas>
+            </div>
+            <button id="ready-for-book-image-button" type="button" onclick="readyForBookImage();">Ready To View Next Book</button>
         </div>
         <div id='lobby-wait-screen'>
             <button style='display:none; margin:auto;' onclick='startGame()'>Start Game</button>
