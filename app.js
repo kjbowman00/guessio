@@ -151,7 +151,6 @@ io.on('connection', function(socket) {
             room.setPlayerVoted(socket.id);
             console.log("bigger hey");
             if (room.isVotingDone()) {
-                //double called somehow
                 io.in(roomName).emit('vote_book_finished');
                 room.resetVotes();
             }

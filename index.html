@@ -25,7 +25,16 @@
         <button type="button">Settings</button>
         <script>//Manage direct room connect</script>
     </div>
+    <div id='chat-box-container'>
+        <h1>Chat box yall</h1>
+        <div id='chat-box-scroller'><h1>chat bubbles here</h1></div>
+        <form id='chat-box-form' onsubmit="return chatSubmit()" action="">
+            <input type='text' maxlength='80'>
+            <input type='submit' value='Send'>
+        </form>
+    </div>
     <div id='game_screen' style="display:none;">
+
         <div id='wait-container'>
             <h1>Wait for others to finish</h1>
             <button type='button' onclick='alert("sike bitch")'>Resubmit</button>

@@ -177,3 +177,28 @@ body {
     border-top-style: solid;
     border-top-size: 2px;
 }
+
+body {
+  width:80%;
+}
+
+#chat-box-container {
+  position: fixed;
+  right:0;
+  top:0;
+    height: 100%;
+    width:25%;
+    background-color: #BDD0C3;
+    border-left-color: black;
+    border-left-style: solid;
+    border-size:2px;
+}
+#chat-box-scroller {
+  border-color: black;
+   border-style: solid;
+   border-width: 2px;
+   height:60%;
+   margin:20px;
+   overflow:auto;
+   background-color:white;
+}
