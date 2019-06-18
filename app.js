@@ -156,6 +156,12 @@ io.on('connection', function(socket) {
             }
         }
     });
+    socket.on('chat_message', function(data) {
+        let roomName = Object.keys(socket.rooms)[1];
+        if (roomName !== undefined) {
+            socket.to(roomName).emit('chat_message', data);
+        }
+    });
 });
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////

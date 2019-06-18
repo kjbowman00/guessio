@@ -118,6 +118,26 @@ socket.on('vote_book_finished', function() {
     bookShownNumber++;
     bookTimer();
 });
+socket.on('chat_message', function(data) {
+    //Create another chat box
+    let bubble = document.createElement("div");
+    bubble.setAttribute("class", "chat-bubble");
+    let avatarImageBubble = document.createElement("img");
+    avatarImageBubble.src = "/images/avatar.png";
+    avatarImageBubble.setAttribute("class", "chat-avatar");
+    bubble.appendChild(avatarImageBubble);
+    let paragraphBubble = document.createElement("p");
+    let nameBubble = document.createElement("strong");
+    let textBubble = document.createTextNode("NAME HERE: ");
+    nameBubble.appendChild(textBubble);
+    textBubble = document.createTextNode("CHAT MESSAGE HERE");
+    paragraphBubble.appendChild(nameBubble);
+    paragraphBubble.appendChild(textBubble);
+    bubble.appendChild(paragraphBubble);
+
+    //add it to the chatbox
+    document.getElementById("chat-box-scroller").appendChild(bubble);
+});
 
 function playGame() {
     //TODO: display "joining room" if aresn't in a private match
@@ -582,4 +602,33 @@ function readyForBookImage() {
 
     //Send info to server
     socket.emit('next_book_ready');
+}
+
+function chatSubmit(node) {
+    //TODO: shutoff chat box if not in room
+
+    let form = document.getElementById('chat-box-form');
+    socket.emit("chat_message", form.children[0].value);
+
+    //Create another chat box
+    let bubble = document.createElement("div");
+    bubble.setAttribute("class", "player-chat-bubble");
+    let avatarImageBubble = document.createElement("img");
+    avatarImageBubble.src = "/images/avatar.png";
+    avatarImageBubble.setAttribute("class", "chat-avatar");
+    bubble.appendChild(avatarImageBubble);
+    let paragraphBubble = document.createElement("p");
+    let nameBubble = document.createElement("strong");
+    let textBubble = document.createTextNode("You: ");
+    nameBubble.appendChild(textBubble);
+    textBubble = document.createTextNode(form.children[0].value);
+    paragraphBubble.appendChild(nameBubble);
+    paragraphBubble.appendChild(textBubble);
+    bubble.appendChild(paragraphBubble);
+
+    form.reset();
+
+    //add it to the chatbox
+    document.getElementById("chat-box-scroller").appendChild(bubble);
+    return false;
 }
