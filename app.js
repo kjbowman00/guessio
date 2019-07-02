@@ -156,9 +156,13 @@ io.on('connection', function(socket) {
             }
         }
     });
-    socket.on('chat_message', function(data) {
+    socket.on('chat_message', function(message) {
         let roomName = Object.keys(socket.rooms)[1];
         if (roomName !== undefined) {
+            let data = {
+                socketID: socket.id,
+                message: message
+            };
             socket.to(roomName).emit('chat_message', data);
         }
     });

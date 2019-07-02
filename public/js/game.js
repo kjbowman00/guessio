@@ -31,6 +31,19 @@ socket.on('join_room_success', function(data) {
 
     document.getElementById('lobby-player-list').style.display = 'inline-flex';
 
+    let chat_box_form = document.getElementById("chat-box-form");
+    chat_box_form.classList.remove("disabled");
+    for (let current_node of chat_box_form.children) {
+        current_node.disabled = false;
+        current_node.classList.remove("mouse-disabled");
+    }
+
+    let chat_box_scroller = document.getElementById("chat-box-scroller");
+    while (chat_box_scroller.hasChildNodes()) {
+        chat_box_scroller.removeChild(chat_box_scroller.firstChild);
+    }
+    //TODO: Unlock chat function
+
     //TODO: Manage people that clicked play already
     if (firstRound) {
         //TODO: Move shit from playGame() to here and also add wait for room screen
@@ -70,7 +83,7 @@ socket.on('player_changed_info', function(data) {
     //TODO: change avatar
 });
 socket.on('game_start', function(data) {
-    //start first round 
+    //start first round
     roomOptions = data;
     firstRound = true;
     wasGuestRound = true;
@@ -119,6 +132,9 @@ socket.on('vote_book_finished', function() {
     bookTimer();
 });
 socket.on('chat_message', function(data) {
+    //get player name
+    let chat_name = players.get(data.socketID).children[0].children[0].innerHTML;
+
     //Create another chat box
     let bubble = document.createElement("div");
     bubble.setAttribute("class", "chat-bubble");
@@ -128,9 +144,9 @@ socket.on('chat_message', function(data) {
     bubble.appendChild(avatarImageBubble);
     let paragraphBubble = document.createElement("p");
     let nameBubble = document.createElement("strong");
-    let textBubble = document.createTextNode("NAME HERE: ");
+    let textBubble = document.createTextNode(chat_name + ": ");
     nameBubble.appendChild(textBubble);
-    textBubble = document.createTextNode("CHAT MESSAGE HERE");
+    textBubble = document.createTextNode(data.message);
     paragraphBubble.appendChild(nameBubble);
     paragraphBubble.appendChild(textBubble);
     bubble.appendChild(paragraphBubble);
@@ -415,6 +431,20 @@ function leaveRoom() {
     document.getElementById('join-room-button').style.display = 'block';
     document.getElementById('leave-room-button').style.display = 'none';
     document.getElementById('game-image-download').style.display = 'none';
+
+    let chat_box_form = document.getElementById("chat-box-form");
+    chat_box_form.classList.add("disabled");
+    for (let current_node of chat_box_form.children) {
+        current_node.disabled = true;
+        current_node.classList.add("mouse-disabled");
+    }
+
+    //Empty chat box
+    let chat_box_scroller = document.getElementById("chat-box-scroller");
+    while (chat_box_scroller.hasChildNodes()) {
+        chat_box_scroller.removeChild(chat_box_scroller.firstChild);
+    }
+
     roomName = "";
     finishGameData = "";
     finishGameDataArray = "";

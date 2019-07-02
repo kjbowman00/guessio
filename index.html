@@ -20,30 +20,18 @@
         <form id='name_form' onsubmit="return playGame()" action="">
             <h1>Enter a name:</h1><br>
             <input id='name_form_text' type='text' name='Name:' maxlength='25'><br>
-            <input type='submit' value='Play'><br>
+            <input class='big-button' type='submit' value='Play'><br>
         </form>
-        <button type="button">Settings</button>
+        <button class='big-button' type="button">Settings</button>
         <script>//Manage direct room connect</script>
     </div>
     <div id='chat-box-container'>
-        <h1>Chat box yall</h1>
+        <h1>Chat Box</h1>
         <div id='chat-box-scroller'><h1>chat bubbles here</h1>
-            <div class='chat-bubble'>
-                <img class='chat-avatar' src='/images/avatar.png'>
-                <p><strong>Andrea: </strong>omg what was that drawing dude lol! It looks so stupid omg</p>
-            </div>
-            <div class='player-chat-bubble'>
-                <img class='chat-avatar' src='/images/avatar.png'>
-                <p>Sure was dogg</p>
-            </div>
-            <div class='chat-bubble'>
-                <img class='chat-avatar' src='/images/avatar.png'>
-                <p><strong>Andrea: </strong>ur dumb</p>
-            </div>
         </div>
-        <form id='chat-box-form' onsubmit="return chatSubmit()" action="">
-            <input id='chat-box-input' type='text' maxlength='80'>
-            <input type='submit' value='Send'>
+        <form id='chat-box-form' class="disabled" onsubmit="return chatSubmit()" action="">
+            <input disabled class='mouse-disabled' id='chat-box-input' style="cursor:inherit" type='text' maxlength='80'>
+            <input disabled type='submit' class='big-button mouse-disabled' style="cursor:inherit;width:30%" value='Send'>
         </form>
     </div>
     <div id='game_screen' style="display:none;">
