@@ -17,14 +17,40 @@
 <body>
     <a id='game-image-download' style='display:none; margin: auto;' onclick='downloadImages();'>Download Previous Games Image:<image src='/images/download_button.png'></image></a>
     <div id='menu'>
-        <form id='name_form' onsubmit="return playGame()" action="">
-            <h1>Enter a name:</h1><br>
-            <input id='name_form_text' type='text' name='Name:' maxlength='25'><br>
-            <input class='big-button' type='submit' value='Play'><br>
-        </form>
-        <button class='big-button' type="button">Settings</button>
-        <script>//Manage direct room connect</script>
+        <div id='avatar-selection-box'>
+            <button class="arrow-button" type='button'><strong>&lt</strong></button>
+            <img src="/images/avatar.png">
+            <button class="arrow-button" type='button'><strong>&gt</strong></button>
+        </div>
+        <div id='name-box'>
+            <h2>Enter a name:</h2>
+            <input id="name-text-input" type='text'>
+            <button onclick="clickedPlay();" class='big-button' type="button">Play</button>
+            <button onclick="clickedCreate();" class='big-button' type="button">Create Private Match</button>
+            <button onclick="clickedJoin();" class='big-button' type="button">Join Private Match</button>
+            <button class='big-button' type="button">Settings</button>
+        </div>
+        
+        <script>//TODO: Manage direct connect to room</script>
     </div>
+    <div id='create-room-box'>
+            <button onclick="backToMenu();" class="back-button" src="/images/back-button.png"></button>
+            <h2>Enter a room name:</h2>
+            <input id="create-room-text-input" type='text'>
+            <button onclick="createRoom();" class='big-button' type="button">Create Room</button>
+        </div>
+    <div id='join-room-box'>
+            <button onclick="backToMenu();" class="back-button" src="/images/back-button.png"></button>
+            <h2>Enter the room name:</h2>
+            <input id="join-room-text-input" type='text'>
+            <button onclick="joinRoom();" class='big-button' type="button">Join Room</button>
+        </div>
+    <div id='wait-room-box'>
+            <button onclick="backToMenu();" class="back-button" src="/images/back-button.png"></button>
+            <h2>Confirming your position in this room...</h2>
+        </div>
+
+
     <div id='chat-box-container'>
         <h1>Chat Box</h1>
         <div id='chat-box-scroller'><h1>chat bubbles here</h1>
@@ -68,7 +94,7 @@
          </div>
          <div id="lc"></div>
       </div>
-   </div>
+        </div>
         
         <form id='guess_form' onsubmit="return submitGuess(document.getElementById('guess_form_text').value)" action="" style='display:none'>
             <div id='guess-image-box'>
@@ -85,22 +111,6 @@
     <div class='footer'>
         <div id='player-avatar-container'>
             <img src='/images/avatar.png' style='height:8%; float:left'>
-            <button id='create-room-button' type="button" style='float:right' onclick="
-         document.getElementById('create-room-button').style.display = 'none';
-         document.getElementById('create-room-form').style.display = 'block';
-         document.getElementById('create-room-form').children[0].focus();">Create Custom Match</button>
-            <form id='create-room-form' style='display:none; float:right' onsubmit='return createRoom()' action=''>
-                <input type='text' name='room-name' maxlength='20'><br>
-                <input type='submit' value='Create Room'><br>
-            </form>
-            <button id='join-room-button' type="button" style='float:right' onclick="
-         document.getElementById('join-room-button').style.display = 'none';
-         document.getElementById('join-room-form').style.display = 'block';
-         document.getElementById('join-room-form').children[0].focus();">Join Custom Match</button>
-            <form id='join-room-form' style='display:none; float:right' onsubmit='return joinRoom()' action=''>
-                <input type='text' name='room-name'><br>
-                <input type='submit' value='Join Room'><br>
-            </form>
             <button id='leave-room-button' style='display:none' onclick='leaveRoom()'>Leave Room</button>
         </div>
         <div id='lobby-screen'>

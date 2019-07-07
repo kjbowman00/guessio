@@ -42,17 +42,13 @@ io.on('connection', function(socket) {
         //Assign user to lowest non-full room
         data = data.slice(0, 25);
         let roomName = Object.keys(socket.rooms)[1];
-        if (roomName == undefined) {
+        if (roomName == undefined && data.trim() != "") {
             //User not in a room yet
             //Put him in one
             roomName = findGame(socket.id);
             joinRoom(socket, roomName, data, true);
         } else {
-            rooms.get(roomName).updatePlayer(socket.id, data, true);
-            let info = {};
-            info.id = socket.id;
-            info.name = data;
-            socket.to(Object.keys(socket.rooms)[1]).emit("player_changed_info", info);
+            console.log("WARN: Player already in a room or no name entered.");
         }
     });
     socket.on('leave_room', function(data) {
@@ -99,8 +95,20 @@ io.on('connection', function(socket) {
     socket.on("create_room_request", function(data) {
         //check if already in room
         if (Object.keys(socket.rooms)[1] != null) {
+            socket.emit('failed_room_create', 'Already in a room');
             return;
         }
+        //check for valid name
+        if (data.playerName == null || data.playerName.trim() == "") {
+            socket.emit('failed_room_create', 'Player name invalid');
+            return;
+        }
+        if (data.roomName == null || data.roomName.trim() == "") {
+            socket.emit('failed_room_create', 'Room name invalid');
+            return;
+        }
+        //TODO: Check for valid options
+
 
         //Check if room is already created
         let roomName = data.roomName;
@@ -108,16 +116,26 @@ io.on('connection', function(socket) {
             socket.join(roomName, function(err) {
                 rooms.set(roomName, new Room(roomName, false, data.options));
                 socket.emit('host_changed', true);
-                joinRoom(socket, roomName, "Unnamed", false);
+                joinRoom(socket, roomName, data.playerName, false);
             });
         } else {
             socket.emit('failed_room_create', 'Room already exists');
         }
     });
     socket.on("join_room_request", function(data) {
+        //check if already in room
+        if (Object.keys(socket.rooms)[1] != null) {
+            socket.emit('join', 'Already in room');
+            return;
+        }
+        if (data.playerName == null || data.playerName.slice(0, 20).trim() == "") {
+            socket.emit('failed_room_join', 'Player name invalid');
+            return;
+        }
+
         let roomName = data.roomName.slice(0, 20);
         if (rooms.get(roomName) != null) {
-            joinRoom(socket, roomName, "Unnamed", false);
+            joinRoom(socket, roomName, data.playerName, false);
         } else {
             socket.emit("failed_room_join", "Room doesn't exist");
         }

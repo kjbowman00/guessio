@@ -18,15 +18,21 @@ var bookShownNumber;
 var tempRemoveLater;
 //TODO: fix timer counting from 60 not 59
 socket.on('join_room_success', function(data) {
+    //TODO: Manage late joining (spectating)
+    //TODO @IMPORTANT @!@#!@#$!@$!@$!@$!$$!@$!@$!@$!$
+    //!@#!@$#!@$!@$!@$!@#$!@#!@$!@#!@#$!@$
+    firstRound = true;
+    wasGuessRound = true;
+    //!@#!@$$!!@$!@$!@#!@#!@#$!@#
+
+
     //Check if in a room already
     //Manages for people who direct connect
     //Hide/Delete menu
     //Show game_screen
     roomName = data.roomName;
-    document.getElementById('join-room-button').style.display = 'none';
-    document.getElementById('join-room-form').style.display = 'none';
-    document.getElementById('create-room-button').style.display = 'none';
-    document.getElementById('create-room-form').style.display = 'none';
+    document.getElementById("wait-room-box").style.display = 'none';
+    document.getElementById('game_screen').style.display = "block";
     document.getElementById('leave-room-button').style.display = 'block';
 
     document.getElementById('lobby-player-list').style.display = 'inline-flex';
@@ -42,9 +48,7 @@ socket.on('join_room_success', function(data) {
     while (chat_box_scroller.hasChildNodes()) {
         chat_box_scroller.removeChild(chat_box_scroller.firstChild);
     }
-    //TODO: Unlock chat function
 
-    //TODO: Manage people that clicked play already
     if (firstRound) {
         //TODO: Move shit from playGame() to here and also add wait for room screen
         //Display play screen
@@ -155,54 +159,45 @@ socket.on('chat_message', function(data) {
     document.getElementById("chat-box-scroller").appendChild(bubble);
 });
 
-function playGame() {
-    //TODO: display "joining room" if aresn't in a private match
-    //TODO: some of this needs to be moved to join_room_success
-    //TODO: Manage joining late
-    //TODO:Display lobby waiting screen rather than starting immediately
-
-    //TODO: Change this to a wait screen if they ahven't joined a room yet
-    document.getElementById('menu').style.display = "none";
-    document.getElementById('game_screen').style.display = "block";
-
-    let name = document.getElementById('name_form_text').value;
-    if (name == "") {
-        alert("you gotta enter a name dog");
-    } else {
-        //TODO: Display joining game message
-        socket.emit('play_game', name);
-        //Display guess box
-        //Ask them to pick a phrase to draw
-        firstRound = true;
-        wasGuessRound = true;
-    }
-    //prevent page redirect
-    return false;
-}
-
 function createRoom() {
     //Send in form information
-    let form = document.getElementById('create-room-form');
+    let form = document.getElementById('create-room-text-input');
+    //Check valid form input
+    if (form.value == null || form.value === "") {
+        //TODO: alert
+        return false;
+    }
+
     let formInfo = {};
     let options = {};
     options.timer = 5;
     formInfo.options = options;
-    formInfo.roomName = form.elements['room-name'].value;
+    formInfo.roomName = form.value;
+    formInfo.playerName = document.getElementById("name-text-input").value;
+    form.parentElement.style.display = "none";
 
     socket.emit('create_room_request', formInfo);
-    //TODO: Display sending information or something like that
+    document.getElementById("wait-room-box").style.display = "block";
 
     return false;
 }
 
 function joinRoom() {
     console.log("joining room");
-    let form = document.getElementById('join-room-form');
+    let form = document.getElementById("join-room-text-input");
+    //Check for bad input
+    if (form.value == null || form.value.trim() === "") {
+        //TODO: alert
+        return false;
+    }
+
     let formInfo = {};
-    formInfo.roomName = form.elements['room-name'].value;
+    formInfo.roomName = form.value;
+    formInfo.playerName = document.getElementById("name-text-input").value;
     console.log(formInfo);
     socket.emit('join_room_request', formInfo);
-    //TODO: Display joining room
+    form.parentElement.style.display = "none";
+    document.getElementById("wait-room-box").style.display = "block";
 
     return false;
 }
@@ -661,4 +656,46 @@ function chatSubmit(node) {
     //add it to the chatbox
     document.getElementById("chat-box-scroller").appendChild(bubble);
     return false;
+}
+
+//For public games only (clicked play button)
+function clickedPlay() {
+    if (checkName()) {
+        socket.emit("play_game", document.getElementById("name-text-input").value);
+        document.getElementById("menu").style.display = "none";
+        document.getElementById("wait-room-box").style.display = "block";
+    }
+}
+
+function clickedCreate() {
+    if (checkName()) {
+        //Open create room panel, hide menu
+        document.getElementById("menu").style.display = "none";
+        document.getElementById("create-room-box").style.display = "block";
+    }
+}
+
+function clickedJoin() {
+    if (checkName()) {
+        //Open join room panel, hide menu
+        document.getElementById("menu").style.display = "none";
+        document.getElementById("join-room-box").style.display = "block";
+    }
+}
+
+function checkName() {
+    let value = document.getElementById("name-text-input").value.trim();
+    if (value == null || value == "") {
+        //notify the user to enter a name
+        return false;
+    }
+    else return true;
+}
+
+function backToMenu() {
+    document.getElementById("menu").style.display = "inline-flex";
+    document.getElementById("game_screen").style.display = "none";
+    document.getElementById("wait-room-box").style.display = "none";
+    document.getElementById("create-room-box").style.display = "none";
+    document.getElementById("join-room-box").style.display = "none";
 }

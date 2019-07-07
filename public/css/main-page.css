@@ -6,11 +6,12 @@ body {
 
 
 #menu {
-    width: 300px;
-    height: 300px;
-    margin: auto;
+    position:absolute;
+    top:0px;
+    left:50%;
+    transform:translate(-100%,0);
+    display:inline-flex;
     margin-top: 100px;
-    background-color: #BDD0C3;
     border-color: black;
     border-style: solid;
     border-width: 2px;
@@ -262,4 +263,75 @@ body {
   width:50%;
   height:30px;
   margin-left:5px;
+}
+.arrow-button {
+  border:none;
+  height:50px;
+}
+#avatar-selection-box {
+  margin:auto;
+  display:inline-flex;
+  justify-content: center;
+  background-color: #BDD0C3;
+  border:solid;
+  width:200px;
+  height:200px;
+}
+#avatar-selection-box img {
+  width:100px;
+  height:100px;
+  margin-top:50px;
+}
+#avatar-selection-box button {
+  margin-top:75px;
+}
+
+#name-box {
+  width: 300px;
+  height: 400px;
+  margin: auto;
+  background-color: #BDD0C3;
+  border-color: black;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 3px;
+}
+
+#create-room-box {
+  display:none;
+
+  width: 300px;
+  height: 400px;
+  margin: auto;
+  background-color: #BDD0C3;
+  border-color: black;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 3px;
+}
+
+#join-room-box {
+  display:none;
+
+  width: 300px;
+  height: 400px;
+  margin: auto;
+  background-color: #BDD0C3;
+  border-color: black;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 3px;
+}
+
+#wait-room-box {
+  display:none;
+
+  width: 300px;
+  height: 400px;
+  margin: auto;
+  background-color: #BDD0C3;
+  border-color: black;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 3px;
 }
