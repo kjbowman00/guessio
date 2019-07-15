@@ -50,10 +50,10 @@ socket.on('join_room_success', function(data) {
     }
 
     if (firstRound) {
-        //TODO: Move shit from playGame() to here and also add wait for room screen
         //Display play screen
         document.getElementById('lobby-wait-screen').style.display = 'block';
-        //hide wait for room screen
+        //TODO: if host
+        document.getElementById('lobby-wait-screen').children[0].style.display = 'block';
     }
 
     if (data.publicGame) {
@@ -69,7 +69,8 @@ socket.on('join_room_success', function(data) {
     }
 });
 socket.on('host_changed', function(data) {
-    isHosting = data;
+    //TODO: Data should actually be player who's now hosting (delete the line below)
+    isHosting = (data === "true");
     if (isHosting) {
         document.getElementById('lobby-wait-screen').children[0].style.display = "block";
     } else {
@@ -83,11 +84,12 @@ socket.on('player_left_room', function(data) {
     playerLeft(data);
 });
 socket.on('player_changed_info', function(data) {
-    players.get(data.id).children[0].children[0].innerHTML = data.name;
+    players.get(data.id).children[0].children[0].textContent = data.name;
     //TODO: change avatar
 });
 socket.on('game_start', function(data) {
     //start first round
+    //TODO: Handle room options
     roomOptions = data;
     firstRound = true;
     wasGuestRound = true;
@@ -95,8 +97,7 @@ socket.on('game_start', function(data) {
 });
 socket.on('book_info', function(data) {
     //Start next round with the new book info
-    console.log("heyo");
-    testingVariable = data;
+    //TODO: escape or encode book info (X-XSS)
     if (wasGuessRound) {
         setupCanvas(data);
     } else {
@@ -131,7 +132,6 @@ socket.on('game_end', function(data) {
     document.getElementById('game-image-download').style.display = 'block';
 });
 socket.on('vote_book_finished', function() {
-    console.log("yo");
     bookShownNumber++;
     bookTimer();
 });
@@ -219,9 +219,27 @@ function setupGuess(data) {
         guessBox.children[1].focus();
     } else {
         //data[0] is the player name who drew the thing
-        let imageData = data[1];
         guessImageBox.style.display = 'block';
-        guessImageBox.children[0].src = imageData;
+        let image = new Image();
+        let imageData = data[1];
+        image.onload = function() {
+            //Check width height
+            if (image.width > 0 && image.height > 0) {
+                guessImageBox.children[0].src = imageData;
+            }
+                
+        };
+        try {
+            let decoded = window.atob(data);
+            if (decoded.slice(1,4) === "PNG") {
+                guessImageBox.children[0].src = "data:image/png;base64," + imageData;
+            } else {
+                guessImageBox.children[0].src = "/images/destroyed.jpg";
+            }
+        } catch (error) {
+            guessImageBox.children[0].src = "/images/destroyed.jpg";
+        }
+
         guessBox.children[0].innerHTML = "Guess what the other user drew!";
         guessBox.children[1].focus();
     }
@@ -230,14 +248,13 @@ function setupGuess(data) {
 
 function setupCanvas(data) {
     let drawing = data[1];
-    console.log(data);
     //data[0] is who drew it
     wasGuessRound = false;
     document.getElementById("draw-container").style.display = "flex";
     document.getElementById('guess_form').style.display = 'none';
     document.getElementById('wait-container').style.display = 'none';
     document.getElementById('lobby-wait-screen').style.display = 'none';
-    document.getElementById('what-to-draw-words').innerHTML = "You're drawing: " + drawing;
+    document.getElementById('what-to-draw-words').textContent = "You're drawing: " + drawing;
 
 
     lc = LC.init(
@@ -338,7 +355,7 @@ function submitGuess(guess) {
 function submitDrawing() {
     //emit an event and send the
     //image data of the canvas
-    socket.emit('drawing_submit', lc.getImage({ rect: { x: 0, y: 0, width: 550, height: 400 } }).toDataURL());
+    socket.emit('drawing_submit', lc.getImage({ rect: { x: 0, y: 0, width: 550, height: 400 } }).toDataURL().slice(22));
     clearInterval(timer);
 
     //Display wait for everyone to finish drawing/guessing
@@ -365,7 +382,7 @@ function playerJoined(id, name, avatar, append) {
         addedElement = document.getElementById('lobby-player-list').insertBefore(listElement.cloneNode(true), listElement);
     }
     addedElement.removeAttribute('id');
-    addedElement.children[0].children[0].innerHTML = name;
+    addedElement.children[0].children[0].textNode = name;
     players.set(id, addedElement);
     //adedElement.children[0].children[1].src = "avatar";
 }
@@ -422,9 +439,6 @@ function myTimer(id, startingMinutes) {
 function leaveRoom() {
    document.getElementById('menu').style.display = "block";
     document.getElementById('game_screen').style.display = "none";
-    document.getElementById('create-room-button').style.display = 'block';
-    document.getElementById('join-room-button').style.display = 'block';
-    document.getElementById('leave-room-button').style.display = 'none';
     document.getElementById('game-image-download').style.display = 'none';
 
     let chat_box_form = document.getElementById("chat-box-form");
@@ -497,12 +511,25 @@ function drawBook(bookIndex) {
 
             let image = new Image();
             image.onload = function() {
-                let centerX = bookWidth + WIDTH / 2 - image.width / 2;
-                let centerY = roundHeight + HEIGHT / 2 - image.height / 2;
-                let ctx = document.getElementById("game-over-canvas").getContext("2d");
-                ctx.drawImage(image, centerX, centerY);
+                //Check width height
+                if (image.width > 0 && image.height > 0) {
+                    let centerX = bookWidth + WIDTH / 2 - image.width / 2;
+                    let centerY = roundHeight + HEIGHT / 2 - image.height / 2;
+                    let ctx = document.getElementById("game-over-canvas").getContext("2d");
+                    ctx.drawImage(image, centerX, centerY);
+                }
+                
             };
-            image.src = data;
+            try {
+                let decoded = window.atob(data);
+                if (decoded.slice(1,4) === "PNG") {
+                    image.src = "data:image/png;base64," + data;
+                } else {
+                    image.src = "/images/destroyed.jpg";
+                }
+            } catch (error) {
+                image.src = "/images/destroyed.jpg";
+            }
 
         }
     }

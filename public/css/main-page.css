@@ -10,12 +10,20 @@ body {
     top:0px;
     left:50%;
     transform:translate(-100%,0);
-    display:inline-flex;
-    margin-top: 100px;
-    border-color: black;
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 3px;
+    display:block;
+    margin-top: 50px;
+}
+#menu-forms {
+  display:inline-flex;
+  margin-top:5px;
+}
+#menu-logo {
+  text-align: center;
+  background-color: #BDD0C3;
+  border-color: black;
+   border-style: solid;
+   border-width: 2px;
+   border-radius: 3px;
 }
 
 #lc-tools-container {
@@ -39,7 +47,9 @@ body {
 #lobby-wait-screen {
    margin:auto;
    margin-top:50px;
-   width:250px; height:200px;background-color: #BDD0C3;
+   width:250px;
+   height:200px;
+   background-color: #BDD0C3;
     border-color: black;
     border-style: solid;
     border-width: 2px;
@@ -271,9 +281,12 @@ body {
 #avatar-selection-box {
   margin:auto;
   display:inline-flex;
+  margin-right:5px;
   justify-content: center;
   background-color: #BDD0C3;
   border:solid;
+  border-width:2px;
+  border-radius:3px;
   width:200px;
   height:200px;
 }
@@ -299,7 +312,6 @@ body {
 
 #create-room-box {
   display:none;
-
   width: 300px;
   height: 400px;
   margin: auto;
@@ -312,7 +324,6 @@ body {
 
 #join-room-box {
   display:none;
-
   width: 300px;
   height: 400px;
   margin: auto;
@@ -325,7 +336,6 @@ body {
 
 #wait-room-box {
   display:none;
-
   width: 300px;
   height: 400px;
   margin: auto;

@@ -17,20 +17,22 @@
 <body>
     <a id='game-image-download' style='display:none; margin: auto;' onclick='downloadImages();'>Download Previous Games Image:<image src='/images/download_button.png'></image></a>
     <div id='menu'>
-        <div id='avatar-selection-box'>
-            <button class="arrow-button" type='button'><strong>&lt</strong></button>
-            <img src="/images/avatar.png">
-            <button class="arrow-button" type='button'><strong>&gt</strong></button>
+        <div id="menu-logo"><img src="/images/logo.png"></div>
+        <div id="menu-forms">
+            <div id='avatar-selection-box'>
+                <button class="arrow-button" type='button'><strong>&lt</strong></button>
+                <img src="/images/avatar.png">
+                <button class="arrow-button" type='button'><strong>&gt</strong></button>
+            </div>
+            <div id='name-box'>
+                <h2>Enter a name:</h2>
+                <input id="name-text-input" type='text'>
+                <button onclick="clickedPlay();" class='big-button' type="button">Play</button>
+                <button onclick="clickedCreate();" class='big-button' type="button">Create Private Match</button>
+                <button onclick="clickedJoin();" class='big-button' type="button">Join Private Match</button>
+                <button class='big-button' type="button">Settings</button>
+            </div>
         </div>
-        <div id='name-box'>
-            <h2>Enter a name:</h2>
-            <input id="name-text-input" type='text'>
-            <button onclick="clickedPlay();" class='big-button' type="button">Play</button>
-            <button onclick="clickedCreate();" class='big-button' type="button">Create Private Match</button>
-            <button onclick="clickedJoin();" class='big-button' type="button">Join Private Match</button>
-            <button class='big-button' type="button">Settings</button>
-        </div>
-        
         <script>//TODO: Manage direct connect to room</script>
     </div>
     <div id='create-room-box'>
