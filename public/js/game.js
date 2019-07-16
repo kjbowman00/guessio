@@ -12,6 +12,8 @@ var finishGameDataArray;
 var timer;
 var testingVariable;
 var brushEllipse;
+var avatarNumber = 0;
+const MAX_AVATARS = 2;
 
 var bookShownNumber;
 
@@ -36,6 +38,7 @@ socket.on('join_room_success', function(data) {
     document.getElementById('leave-room-button').style.display = 'block';
 
     document.getElementById('lobby-player-list').style.display = 'inline-flex';
+    document.getElementById("lobby-player-list-you").children[0].children[1].src = "/images/avatars/avatar" + String(avatarNumber) + ".png";
 
     let chat_box_form = document.getElementById("chat-box-form");
     chat_box_form.classList.remove("disabled");
@@ -62,9 +65,9 @@ socket.on('join_room_success', function(data) {
         document.getElementById('lobby-text').innerHTML = "You're in room: " + data.roomName;
     }
     if (!isEmpty(data.players)) {
-        let playerNameMap = new Map(data.players);
-        playerNameMap.forEach(function(name, id, map) {
-            playerJoined(id, name, data.avatar, false);
+        let playerMap = new Map(data.players);
+        playerMap.forEach(function(player, id, map) {
+            playerJoined(id, player.playerName, player.avatarNumber, false);
         });
     }
 });
@@ -78,7 +81,7 @@ socket.on('host_changed', function(data) {
     }
 });
 socket.on('player_joined_room', function(data) {
-    playerJoined(data.id, data.name, "avatar.txt", true);
+    playerJoined(data.id, data.name, data.avatarNumber, true);
 });
 socket.on('player_left_room', function(data) {
     playerLeft(data);
@@ -143,7 +146,7 @@ socket.on('chat_message', function(data) {
     let bubble = document.createElement("div");
     bubble.setAttribute("class", "chat-bubble");
     let avatarImageBubble = document.createElement("img");
-    avatarImageBubble.src = "/images/avatar.png";
+    avatarImageBubble.src = "/images/avatars/avatar0.png";
     avatarImageBubble.setAttribute("class", "chat-avatar");
     bubble.appendChild(avatarImageBubble);
     let paragraphBubble = document.createElement("p");
@@ -174,6 +177,7 @@ function createRoom() {
     formInfo.options = options;
     formInfo.roomName = form.value;
     formInfo.playerName = document.getElementById("name-text-input").value;
+    formInfo.avatarNumber = avatarNumber;
     form.parentElement.style.display = "none";
 
     socket.emit('create_room_request', formInfo);
@@ -183,7 +187,6 @@ function createRoom() {
 }
 
 function joinRoom() {
-    console.log("joining room");
     let form = document.getElementById("join-room-text-input");
     //Check for bad input
     if (form.value == null || form.value.trim() === "") {
@@ -194,6 +197,7 @@ function joinRoom() {
     let formInfo = {};
     formInfo.roomName = form.value;
     formInfo.playerName = document.getElementById("name-text-input").value;
+    formInfo.avatarNumber = avatarNumber;
     console.log(formInfo);
     socket.emit('join_room_request', formInfo);
     form.parentElement.style.display = "none";
@@ -382,9 +386,17 @@ function playerJoined(id, name, avatar, append) {
         addedElement = document.getElementById('lobby-player-list').insertBefore(listElement.cloneNode(true), listElement);
     }
     addedElement.removeAttribute('id');
-    addedElement.children[0].children[0].textNode = name;
+    addedElement.children[0].children[0].textContent = name;
     players.set(id, addedElement);
-    //adedElement.children[0].children[1].src = "avatar";
+
+    if (Number(avatar) >= 0 && Number(avatar) < MAX_AVATARS) {
+        addedElement.children[0].children[1].src = "/images/avatars/avatar" + String(Number(avatar)) + ".png";
+    }
+    else {
+        addedElement.children[0].children[1].src = "/images/avatars/avatar0.png";
+    }
+
+    
 }
 
 function playerLeft(id) {
@@ -666,7 +678,7 @@ function chatSubmit(node) {
     let bubble = document.createElement("div");
     bubble.setAttribute("class", "player-chat-bubble");
     let avatarImageBubble = document.createElement("img");
-    avatarImageBubble.src = "/images/avatar.png";
+    avatarImageBubble.src = "/images/avatars/avatar" + String(avatarNumber) + ".png";
     avatarImageBubble.setAttribute("class", "chat-avatar");
     bubble.appendChild(avatarImageBubble);
     let paragraphBubble = document.createElement("p");
@@ -688,7 +700,10 @@ function chatSubmit(node) {
 //For public games only (clicked play button)
 function clickedPlay() {
     if (checkName()) {
-        socket.emit("play_game", document.getElementById("name-text-input").value);
+        let data = {};
+        data.name = document.getElementById("name-text-input").value;
+        data.avatarNumber = avatarNumber;
+        socket.emit("play_game", data);
         document.getElementById("menu").style.display = "none";
         document.getElementById("wait-room-box").style.display = "block";
     }
@@ -725,4 +740,13 @@ function backToMenu() {
     document.getElementById("wait-room-box").style.display = "none";
     document.getElementById("create-room-box").style.display = "none";
     document.getElementById("join-room-box").style.display = "none";
+}
+
+function changeAvatar(direction) {
+    avatarNumber += direction;
+    avatarNumber = avatarNumber % MAX_AVATARS;
+    if (avatarNumber < 0) avatarNumber = MAX_AVATARS - 1;
+    document.getElementById("avatar-selection-box").children[1].src = "/images/avatars/avatar" + String(avatarNumber) + ".png";
+    document.getElementById("player-avatar-container").children[0].src = "/images/avatars/avatar" + String(avatarNumber) + ".png";
+
 }

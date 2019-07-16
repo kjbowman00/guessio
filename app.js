@@ -46,7 +46,7 @@ io.on('connection', function(socket) {
             //User not in a room yet
             //Put him in one
             roomName = findGame(socket.id);
-            joinRoom(socket, roomName, data, true);
+            joinRoom(socket, roomName, data, true, data.avatarNumber);
         } else {
             console.log("WARN: Player already in a room or no name entered.");
         }
@@ -116,7 +116,7 @@ io.on('connection', function(socket) {
             socket.join(roomName, function(err) {
                 rooms.set(roomName, new Room(roomName, false, data.options));
                 socket.emit('host_changed', true);
-                joinRoom(socket, roomName, data.playerName, false);
+                joinRoom(socket, roomName, data.playerName, false, data.avatarNumber);
             });
         } else {
             socket.emit('failed_room_create', 'Room already exists');
@@ -135,7 +135,7 @@ io.on('connection', function(socket) {
 
         let roomName = data.roomName.slice(0, 20);
         if (rooms.get(roomName) != null) {
-            joinRoom(socket, roomName, data.playerName, false);
+            joinRoom(socket, roomName, data.playerName, false, data.avatarNumber);
         } else {
             socket.emit("failed_room_join", "Room doesn't exist");
         }
@@ -208,12 +208,12 @@ function findGame(socketID) {
     return socketID + "1";
 }
 
-function joinRoom(socket, roomName, playerName, publicGame) {
+function joinRoom(socket, roomName, playerName, publicGame, avatarNumber) {
     socket.join(roomName, function(err) {
         let room = rooms.get(roomName);
         socket.emit("join_room_success", { roomName: roomName, players: Array.from(room.playersNames), publicGame: publicGame });
-        socket.to(roomName).emit('player_joined_room', { id: socket.id, name: playerName });
-        room.addPlayer(socket.id, playerName);
+        socket.to(roomName).emit('player_joined_room', { id: socket.id, name: playerName, avatarNumber:avatarNumber });
+        room.addPlayer(socket.id, playerName, avatarNumber);
         playerRoomNames.set(socket.id, roomName);
     });
 }

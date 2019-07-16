@@ -20,9 +20,9 @@
         <div id="menu-logo"><img src="/images/logo.png"></div>
         <div id="menu-forms">
             <div id='avatar-selection-box'>
-                <button class="arrow-button" type='button'><strong>&lt</strong></button>
-                <img src="/images/avatar.png">
-                <button class="arrow-button" type='button'><strong>&gt</strong></button>
+                <button onclick="changeAvatar(1);" class="arrow-button" type='button'><strong>&lt</strong></button>
+                <img src="/images/avatars/avatar0.png">
+                <button onclick="changeAvatar(-1)" class="arrow-button" type='button'><strong>&gt</strong></button>
             </div>
             <div id='name-box'>
                 <h2>Enter a name:</h2>
@@ -112,15 +112,15 @@
     </div>
     <div class='footer'>
         <div id='player-avatar-container'>
-            <img src='/images/avatar.png' style='height:8%; float:left'>
+            <img src='/images/avatars/avatar0.png' style='height:8%; float:left'>
             <button id='leave-room-button' style='display:none' onclick='leaveRoom()'>Leave Room</button>
         </div>
         <div id='lobby-screen'>
             <p id='lobby-text'>You're not currently in a lobby</p>
-            <ul id='lobby-player-list' style='display:none;'>
+            <ul id='lobby-player-list' style='display:inline-block;'>
                 <li id='lobby-player-list-you'>
                     <div class='center-container'>
-                        <div class='centered'>You</div><img src='/images/avatar.png' style='width:50px;'>
+                        <div class='centered'>You</div><img src='/images/avatars/avatar0.png' style='width:50px;'>
                     </div>
                 </li>
             </ul>

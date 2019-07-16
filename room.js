@@ -174,7 +174,7 @@ class Room {
 	get playersNames() {
 		let nameMap = new Map();
 		this._players.forEach((player, socketID, map) => {
-			nameMap.set(socketID, player.name);
+			nameMap.set(socketID, {playerName:player.name, avatarNumber: player.avatarNumber});
 		});
 		return nameMap;
 	}
@@ -183,12 +183,13 @@ class Room {
 		return this._host;
 	}
 
-	updatePlayer(socketID, name, clickedPlay) {
+	updatePlayer(socketID, name, clickedPlay, avatarNumber) {
 		this._players.get(socketID).name = name;
+		this._players.get(socketID).avatarNumber = avatarNumber;
 	}
 
-	addPlayer(socketID, name) {
-		this._players.set(socketID, new Player(socketID, name, this._round == 0));
+	addPlayer(socketID, name, avatarNumber) {
+		this._players.set(socketID, new Player(socketID, name, this._round == 0, avatarNumber));
 		if (this._players.size == 1) {
 			this._host = socketID;
 		}
