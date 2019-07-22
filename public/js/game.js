@@ -13,6 +13,7 @@ var timer;
 var testingVariable;
 var brushEllipse;
 var avatarNumber = 0;
+var isPlaying = false;
 const MAX_AVATARS = 2;
 
 var bookShownNumber;
@@ -23,7 +24,9 @@ socket.on('join_room_success', function(data) {
     //TODO: Manage late joining (spectating)
     //TODO @IMPORTANT @!@#!@#$!@$!@$!@$!$$!@$!@$!@$!$
     //!@#!@$#!@$!@$!@$!@#$!@#!@$!@#!@#$!@$
-    firstRound = true;
+    firstRound = (data.round == 0);
+    isPlaying = firstRound;
+    isHosting = (socket.id == data.host);
     wasGuessRound = true;
     //!@#!@$$!!@$!@$!@#!@#!@#$!@#
 
@@ -55,8 +58,12 @@ socket.on('join_room_success', function(data) {
     if (firstRound) {
         //Display play screen
         document.getElementById('lobby-wait-screen').style.display = 'block';
-        //TODO: if host
-        document.getElementById('lobby-wait-screen').children[0].style.display = 'block';
+        if (isHosting) {
+            document.getElementById('lobby-wait-screen').children[0].style.display = 'block';
+        }
+        
+    } else {
+        //TODO: add something saying spectating
     }
 
     if (data.publicGame) {
@@ -67,7 +74,9 @@ socket.on('join_room_success', function(data) {
     if (!isEmpty(data.players)) {
         let playerMap = new Map(data.players);
         playerMap.forEach(function(player, id, map) {
-            playerJoined(id, player.playerName, player.avatarNumber, false);
+            if (id !== socket.id) {
+                playerJoined(id, player.playerName, player.avatarNumber, false);
+            }
         });
     }
 });
@@ -82,6 +91,7 @@ socket.on('host_changed', function(data) {
 });
 socket.on('player_joined_room', function(data) {
     playerJoined(data.id, data.name, data.avatarNumber, true);
+    console.log("player joined");
 });
 socket.on('player_left_room', function(data) {
     playerLeft(data);
@@ -94,16 +104,16 @@ socket.on('game_start', function(data) {
     //start first round
     //TODO: Handle room options
     roomOptions = data;
+    isPlaying = true;
     firstRound = true;
     wasGuestRound = true;
     setupGuess(null);
 });
 socket.on('book_info', function(data) {
     //Start next round with the new book info
-    //TODO: escape or encode book info (X-XSS)
-    if (wasGuessRound) {
+    if (isPlaying && wasGuessRound) {
         setupCanvas(data);
-    } else {
+    } else if (isPlaying) {
         setupGuess(data);
     }
 });
@@ -234,7 +244,7 @@ function setupGuess(data) {
                 
         };
         try {
-            let decoded = window.atob(data);
+            let decoded = window.atob(imageData);
             if (decoded.slice(1,4) === "PNG") {
                 guessImageBox.children[0].src = "data:image/png;base64," + imageData;
             } else {
@@ -433,7 +443,12 @@ function myTimer(id, startingMinutes) {
             console.log("timer finished");
             //force submission
             if (wasGuessRound) {
-                submitGuess(document.getElementById('guess_form_text').value);
+                let guess = document.getElementById('guess_form_text').value;
+                if (guess.trim() == "") {
+                    submitGuess("Failed to submit guess");
+                } else {
+                    submitGuess(guess);
+                }
             } else submitDrawing();
             return;
         }

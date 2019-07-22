@@ -276,7 +276,11 @@ body {
 }
 .arrow-button {
   border:none;
+  background-color:#66BC4F;
   height:50px;
+}
+.arrow-button:hover {
+  filter:brightness(85%);
 }
 #avatar-selection-box {
   margin:auto;
@@ -344,4 +348,7 @@ body {
   border-style: solid;
   border-width: 2px;
   border-radius: 3px;
+}
+#name-text-input {
+  
 }

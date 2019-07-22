@@ -211,10 +211,10 @@ function findGame(socketID) {
 function joinRoom(socket, roomName, playerName, publicGame, avatarNumber) {
     socket.join(roomName, function(err) {
         let room = rooms.get(roomName);
-        socket.emit("join_room_success", { roomName: roomName, players: Array.from(room.playersNames), publicGame: publicGame });
+        playerRoomNames.set(socket.id, roomName);
         socket.to(roomName).emit('player_joined_room', { id: socket.id, name: playerName, avatarNumber:avatarNumber });
         room.addPlayer(socket.id, playerName, avatarNumber);
-        playerRoomNames.set(socket.id, roomName);
+        socket.emit("join_room_success", { roomName: roomName, players: Array.from(room.playersNames), publicGame: publicGame, round:room.round, host:room.host });
     });
 }
 
