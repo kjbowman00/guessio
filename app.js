@@ -40,9 +40,15 @@ var rooms = new Map();
 io.on('connection', function(socket) {
     socket.on('play_game', function(data) {
         //Assign user to lowest non-full room
-        data = data.slice(0, 25);
+        let name = "Unnamed";
+        try {
+            name = data.name.slice(0,25);
+        }
+        catch (error) {
+            console.log("improper name- " + String(data.name) + " -entered by: " + socket.id);
+        }
         let roomName = Object.keys(socket.rooms)[1];
-        if (roomName == undefined && data.trim() != "") {
+        if (roomName == undefined && name.trim() != "") {
             //User not in a room yet
             //Put him in one
             roomName = findGame(socket.id);

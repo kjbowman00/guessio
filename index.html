@@ -16,24 +16,25 @@
 
 <body>
     <a id='game-image-download' style='display:none; margin: auto;' onclick='downloadImages();'>Download Previous Games Image:<image src='/images/download_button.png'></image></a>
-    <div id='menu'>
-        <div id="menu-logo"><img src="/images/logo.png"></div>
-        <div id="menu-forms">
-            <div id='avatar-selection-box'>
-                <button onclick="changeAvatar(1);" class="arrow-button" type='button'><strong>&lt</strong></button>
-                <img src="/images/avatars/avatar0.png">
-                <button onclick="changeAvatar(-1)" class="arrow-button" type='button'><strong>&gt</strong></button>
+    <div id="screen-holder">
+        <div id='menu'>
+            <div id="menu-logo"><img src="/images/logo.png"></div>
+            <div id="menu-forms">
+                <div id='avatar-selection-box'>
+                    <button onclick="changeAvatar(1);" class="arrow-button" type='button'><strong>&lt</strong></button>
+                    <img src="/images/avatars/avatar0.png">
+                    <button onclick="changeAvatar(-1)" class="arrow-button" type='button'><strong>&gt</strong></button>
+                </div>
+                 <div id='name-box'>
+                    <input placeholder="Enter a name" id="name-text-input" type='text'>
+                    <button onclick="clickedPlay();" class='big-button' type="button">Join Public Match</button>
+                    <button onclick="clickedCreate();" class='big-button' type="button">Create Private Match</button>
+                    <button onclick="clickedJoin();" class='big-button' type="button">Join Private Match</button>
+                    <button class='big-button' type="button">Settings</button>
+                </div>
             </div>
-            <div id='name-box'>
-                <input placeholder="Enter a name" id="name-text-input" type='text'>
-                <button onclick="clickedPlay();" class='big-button' type="button">Join Public Match</button>
-                <button onclick="clickedCreate();" class='big-button' type="button">Create Private Match</button>
-                <button onclick="clickedJoin();" class='big-button' type="button">Join Private Match</button>
-                <button class='big-button' type="button">Settings</button>
-            </div>
+            <script>//TODO: Manage direct connect to room</script>
         </div>
-        <script>//TODO: Manage direct connect to room</script>
-    </div>
     <div id='create-room-box'>
             <button onclick="backToMenu();" class="back-button" src="/images/back-button.png"></button>
             <h2>Enter a room name:</h2>
@@ -51,16 +52,6 @@
             <h2>Confirming your position in this room...</h2>
         </div>
 
-
-    <div id='chat-box-container'>
-        <h1>Chat Box</h1>
-        <div id='chat-box-scroller'><h1>chat bubbles here</h1>
-        </div>
-        <form id='chat-box-form' class="disabled" onsubmit="return chatSubmit()" action="">
-            <input disabled class='mouse-disabled' id='chat-box-input' style="cursor:inherit" type='text' maxlength='80'>
-            <input disabled type='submit' class='big-button mouse-disabled' style="cursor:inherit;width:30%" value='Send'>
-        </form>
-    </div>
     <div id='game_screen' style="display:none;">
 
         <div id='wait-container'>
@@ -107,6 +98,17 @@
                <input type='submit' value='Submit'>
                <h1 id='guess-timer'>seconds left</h1>
             </div>
+        </form>
+    </div>
+        </div>
+
+    <div id='chat-box-container'>
+        <h1>Chat Box</h1>
+        <div id='chat-box-scroller'><h1>chat bubbles here</h1>
+        </div>
+        <form id='chat-box-form' class="disabled" onsubmit="return chatSubmit()" action="">
+            <input disabled class='mouse-disabled' id='chat-box-input' style="cursor:inherit" type='text' maxlength='80'>
+            <input disabled type='submit' class='big-button mouse-disabled' style="cursor:inherit;width:30%" value='Send'>
         </form>
     </div>
     <div class='footer'>

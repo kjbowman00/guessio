@@ -763,5 +763,5 @@ function changeAvatar(direction) {
     if (avatarNumber < 0) avatarNumber = MAX_AVATARS - 1;
     document.getElementById("avatar-selection-box").children[1].src = "/images/avatars/avatar" + String(avatarNumber) + ".png";
     document.getElementById("player-avatar-container").children[0].src = "/images/avatars/avatar" + String(avatarNumber) + ".png";
-
+    document.getElementById("lobby-player-list-you").children[0].children[1].src = "/images/avatars/avatar" + String(avatarNumber) +".png";
 }
