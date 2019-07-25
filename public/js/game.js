@@ -10,6 +10,7 @@ var roomName;
 var finishGameData;
 var finishGameDataArray;
 var timer;
+var publicGameStartTimer;
 var testingVariable;
 var brushEllipse;
 var avatarNumber = 0;
@@ -27,6 +28,7 @@ socket.on('join_room_success', function(data) {
     firstRound = (data.round == 0);
     isPlaying = firstRound;
     isHosting = (socket.id == data.host);
+    if (data.publicGame) isHosting = false;
     wasGuessRound = true;
     //!@#!@$$!!@$!@$!@#!@#!@#$!@#
 
@@ -68,8 +70,11 @@ socket.on('join_room_success', function(data) {
 
     if (data.publicGame) {
         document.getElementById('lobby-text').innerHTML = "You are in a public lobby";
+        document.getElementById('lobby-wait-screen').children[1].innerHTML = "This match will automatically start when 4 players join the lobby";
     } else {
         document.getElementById('lobby-text').innerHTML = "You're in room: " + data.roomName;
+        document.getElementById('lobby-wait-screen').children[1].innerHTML = "The game has not started yet";
+        document.getElementById('lobby-wait-screen').children[2].style.display = "none";
     }
     if (!isEmpty(data.players)) {
         let playerMap = new Map(data.players);
@@ -108,6 +113,9 @@ socket.on('game_start', function(data) {
     firstRound = true;
     wasGuestRound = true;
     setupGuess(null);
+    clearInterval(publicGameStartTimer);
+    document.getElementById("lobby-wait-screen").children[2].style.display = "none";
+    document.getElementById("lobby-wait-screen").children[1].style.display = "block";
 });
 socket.on('book_info', function(data) {
     //Start next round with the new book info
@@ -170,6 +178,19 @@ socket.on('chat_message', function(data) {
 
     //add it to the chatbox
     document.getElementById("chat-box-scroller").appendChild(bubble);
+});
+socket.on('public_match_timer_start', function() {
+    console.log("hey");
+    document.getElementById("lobby-wait-screen").children[1].style.display = "none";
+    let myDisplay = document.getElementById("lobby-wait-screen").children[2];
+    myDisplay.style.display = "block";
+    mySecondsTimer(15, myDisplay);
+});
+socket.on('public_match_timer_cancel', function() {
+    console.log("hey2");
+    clearInterval(publicGameStartTimer);
+    document.getElementById("lobby-wait-screen").children[2].style.display = "none";
+    document.getElementById("lobby-wait-screen").children[1].innerHTML = "This match will automatically start when 4 players join the lobby";
 });
 
 function createRoom() {
@@ -764,4 +785,18 @@ function changeAvatar(direction) {
     document.getElementById("avatar-selection-box").children[1].src = "/images/avatars/avatar" + String(avatarNumber) + ".png";
     document.getElementById("player-avatar-container").children[0].src = "/images/avatars/avatar" + String(avatarNumber) + ".png";
     document.getElementById("lobby-player-list-you").children[0].children[1].src = "/images/avatars/avatar" + String(avatarNumber) +".png";
+}
+
+function mySecondsTimer(seconds, timerDisplay) {
+    timerDisplay.innerHTML = `Starting in: ${seconds}s`;
+    publicGameStartTimer = setInterval(function() {
+        seconds--;
+        if (seconds < 0) {
+            clearInterval(publicGameStartTimer);
+            //game should start from the server's request
+            return;
+        }
+        timerDisplay.innerHTML = `Starting in: ${seconds}s`;
+    }, 1000);
+
 }

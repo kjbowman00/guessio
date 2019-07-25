@@ -7,10 +7,24 @@ class Room {
 		this._options = options;
 		this._round = 0;
 		this._timer = null;
+		this._publicMatchTimer = null;
 		this._gameOver = false;
 		this._numVotedPlayers = 0;
 
 		this._players = new Map();
+	}
+
+	_startPublicMatchTimer(app, io) {
+		console.log("YESSSS");
+		io.in(this._roomName).emit("public_match_timer_start");
+		this._publicMatchTimer = setTimeout(() => {
+			this.startGame(app);
+			io.in(this._roomName).emit("game_start", this._options);
+		}, 15000);
+	}
+
+	_clearPublicRoundTimer() {
+		clearTimeout(this._publicMatchTimer);
 	}
 
 	clearRoundTimer() {
@@ -188,15 +202,25 @@ class Room {
 		this._players.get(socketID).avatarNumber = avatarNumber;
 	}
 
-	addPlayer(socketID, name, avatarNumber) {
+	addPlayer(socketID, name, avatarNumber, app, io) {
 		this._players.set(socketID, new Player(socketID, name, this._round == 0, avatarNumber));
 		if (this._players.size == 1) {
 			this._host = socketID;
+		}
+		if (this._publicGame && this.playerCount >= 4 && this._round == 0) {
+			this._startPublicMatchTimer(app, io);
 		}
 	}
 
 	removePlayer(socketID) {
 		this._players.delete(socketID);
+		if (this._publicGame) {
+			if (this.playerCount < 4) {
+				this._clearPublicRoundTimer();
+			}
+		} else {
+
+		}
 		//TODO: Pick a new host
 	}
 

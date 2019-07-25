@@ -5,7 +5,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
 const Room = require('./room.js');
-const DEFAULT_OPTIONS = {};
+const DEFAULT_OPTIONS = {timer:5};
 //Gets around issue of this being overridden in callback functions
 var _this = this;
 
@@ -52,7 +52,7 @@ io.on('connection', function(socket) {
             //User not in a room yet
             //Put him in one
             roomName = findGame(socket.id);
-            joinRoom(socket, roomName, data, true, data.avatarNumber);
+            joinRoom(socket, roomName, name, true, data.avatarNumber);
         } else {
             console.log("WARN: Player already in a room or no name entered.");
         }
@@ -154,11 +154,10 @@ io.on('connection', function(socket) {
         //Check if actually in lobby,
         //lobby is private, and actually hosting
         //start game
-        console.log(socket.rooms);
         let roomName = Object.keys(socket.rooms)[1];
         let room = rooms.get(roomName);
-        console.log("Game starting:" + roomName);
         if (roomName !== undefined && !room.publicGame && room.host == socket.id) {
+            console.log("Game Starting for room: " + roomName);
             //Depends on room options
             room.startGame(_this);
             let options = room.options;
@@ -218,9 +217,11 @@ function joinRoom(socket, roomName, playerName, publicGame, avatarNumber) {
     socket.join(roomName, function(err) {
         let room = rooms.get(roomName);
         playerRoomNames.set(socket.id, roomName);
+        console.log("yuh1");
         socket.to(roomName).emit('player_joined_room', { id: socket.id, name: playerName, avatarNumber:avatarNumber });
-        room.addPlayer(socket.id, playerName, avatarNumber);
+        room.addPlayer(socket.id, playerName, avatarNumber, _this, io);
         socket.emit("join_room_success", { roomName: roomName, players: Array.from(room.playersNames), publicGame: publicGame, round:room.round, host:room.host });
+        console.log("yuh2");
     });
 }
 
