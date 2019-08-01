@@ -164,7 +164,7 @@ socket.on('chat_message', function(data) {
     let bubble = document.createElement("div");
     bubble.setAttribute("class", "chat-bubble");
     let avatarImageBubble = document.createElement("img");
-    avatarImageBubble.src = "/images/avatars/avatar0.png";
+    avatarImageBubble.src = players.get(data.socketID).children[0].children[1].src;
     avatarImageBubble.setAttribute("class", "chat-avatar");
     bubble.appendChild(avatarImageBubble);
     let paragraphBubble = document.createElement("p");
