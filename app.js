@@ -170,7 +170,7 @@ io.on('connection', function(socket) {
         console.log('hey');
         let roomName = Object.keys(socket.rooms)[1];
         let room = rooms.get(roomName);
-        if (roomName !== undefined && !room.publicGame && room.gameOver) {
+        if (roomName !== undefined && room.gameOver) {
             room.setPlayerVoted(socket.id);
             console.log("bigger hey");
             if (room.isVotingDone()) {

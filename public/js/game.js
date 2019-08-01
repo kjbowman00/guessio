@@ -15,7 +15,7 @@ var testingVariable;
 var brushEllipse;
 var avatarNumber = 0;
 var isPlaying = false;
-const MAX_AVATARS = 2;
+const MAX_AVATARS = 6;
 
 var bookShownNumber;
 

@@ -213,6 +213,9 @@ class Room {
 	}
 
 	removePlayer(socketID) {
+		if (this._players.get(socketID).votedNextBook) {
+			this._numVotedPlayers--;
+		}
 		this._players.delete(socketID);
 		if (this._publicGame) {
 			if (this.playerCount < 4) {
