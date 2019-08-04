@@ -144,7 +144,7 @@ socket.on('game_end', function(data) {
     //For temporary testing just show game over
     let canvas = document.getElementById("game-over-canvas");
     canvas.width = 550;
-    canvas.height = getHeightForRound(finishGameDataArray.length + 2) - 1;
+    canvas.height = getHeightForRound(finishGameDataArray.length + 1) - 1;
     document.getElementById('game-over-screen').style.display = 'block';
 
     bookShownNumber = 0;
@@ -259,7 +259,7 @@ function setupGuess(data) {
         let imageData = data[1];
         image.onload = function() {
             //Check width height
-            if (image.width > 0 && image.height > 0) {
+            if (image.width > 0 && image.height > 0 && image.width <= 550 && image.height <= 400) {
                 guessImageBox.children[0].src = imageData;
             }
                 
@@ -534,6 +534,7 @@ function drawBook(bookIndex) {
     let book = finishGameDataArray[bookIndex][1];
     const WIDTH = 550;
     const HEIGHT = 400;
+    const TEXT_SPACE = 50;
     let GUESS_HEIGHT = 170;
     let canvas = document.getElementById("game-over-canvas");
     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
@@ -547,25 +548,28 @@ function drawBook(bookIndex) {
 
         let name = array[0];
         let data = array[1];
-
         if (isGuessRound(i)) {
+            let afterText = " guessed the following:";
+            if (i==0) afterText = " came up with this idea:";
             //writeText(name, bookWidth + 5, roundHeight + 5, false, canvas);
             //writeText(data, bookWidth + WIDTH/2, roundHeight + GUESS_HEIGHT/2, true, canvas);
-            wrapText(canvas.getContext("2d"), name, bookWidth + 5, roundHeight + 25, WIDTH - 20, 25, false);
-            wrapText(canvas.getContext("2d"), handleLongWords(data, 36), bookWidth + WIDTH / 2, roundHeight + GUESS_HEIGHT / 2 - 35, WIDTH - 20, 25, true);
+            wrapText(canvas.getContext("2d"), afterText, bookWidth + 5, roundHeight + 25, WIDTH - 20, 25, false, name);
+            wrapText(canvas.getContext("2d"), handleLongWords(data, 36), bookWidth + WIDTH / 2, roundHeight + GUESS_HEIGHT / 2 - 25, WIDTH - 20, 25, true);
         } else {
+            let afterText = " drew the following:";
+            if (i==1) afterText = " drew his idea:";
             //writeText(name, bookWidth+5, roundHeight + 5, false, canvas);
-            wrapText(canvas.getContext("2d"), name, bookWidth + 5, roundHeight + 25, WIDTH - 20, 25, false);
 
             let image = new Image();
             image.onload = function() {
                 //Check width height
-                if (image.width > 0 && image.height > 0) {
+                if (image.width > 0 && image.height > 0 && image.width <= 550 && image.height <= 400) {
                     let centerX = bookWidth + WIDTH / 2 - image.width / 2;
-                    let centerY = roundHeight + HEIGHT / 2 - image.height / 2;
+                    let centerY = roundHeight + TEXT_SPACE + HEIGHT / 2 - image.height / 2;
                     let ctx = document.getElementById("game-over-canvas").getContext("2d");
                     ctx.drawImage(image, centerX, centerY);
                 }
+                wrapText(canvas.getContext("2d"), afterText, bookWidth + 5, roundHeight + 25, WIDTH - 20, 25, false, name);
                 
             };
             try {
@@ -577,6 +581,7 @@ function drawBook(bookIndex) {
                 }
             } catch (error) {
                 image.src = "/images/destroyed.jpg";
+                wrapText(canvas.getContext("2d"), afterText, bookWidth + 5, roundHeight + 25, WIDTH - 20, 25, false, name);
             }
 
         }
@@ -585,17 +590,18 @@ function drawBook(bookIndex) {
 
 function getHeightForRound(i) {
     //Height will change depending on guess round or draw
+    let TEXT_SPACE = 50;
     let HEIGHT = 400;
     let GUESS_HEIGHT = 170;
     if (isGuessRound(i)) {
-        return i * HEIGHT / 2 + i * GUESS_HEIGHT / 2 + i;
+        return i * (TEXT_SPACE + HEIGHT) / 2 + i * GUESS_HEIGHT / 2 + i;
         //0 > 0
         //2 > H + GH
         //4 > 2H + 2GH
     } else {
         let numH = (i - 1) / 2;
         let numGH = i - numH;
-        return numH * HEIGHT + numGH * GUESS_HEIGHT;
+        return numH * (HEIGHT + TEXT_SPACE) + numGH * GUESS_HEIGHT;
         //1 > GH
         //3 > 2GH + H
         //5 > 3GH + 2H
@@ -648,13 +654,24 @@ function handleLongWords(text, maxLength) {
 }
 
 //Thanks to MichaelCalvin on stackoverflow
-function wrapText(ctx, text, x, y, maxWidth, lineHeight, centered) {
-    ctx.font = "20px Comic Sans MS";
+function wrapText(ctx, text, x, y, maxWidth, lineHeight, centered, name) {
+    
     if (centered) {
         ctx.textAlign = "center";
     } else {
         ctx.textAlign = "left";
     }
+
+    if (name != undefined && name != "") {
+        ctx.font = "bold 20px Comic Sans MS";
+        ctx.fillText(name, x, y);
+        console.log(x);
+        x += ctx.measureText(name).width;
+        console.log("heeeyaw");
+        console.log(x);
+    }
+    ctx.font = "20px Comic Sans MS";
+
     var words = text.split(' ');
     var line = '';
 
