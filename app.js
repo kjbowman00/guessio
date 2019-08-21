@@ -263,6 +263,7 @@ function leaveRoom(socket) {
         socket.leave(roomName);
         if (room.playerCount == 0) {
             room.clearRoundTimer();
+            room._clearPublicRoundTimer();
             rooms.delete(roomName);
         }
     }

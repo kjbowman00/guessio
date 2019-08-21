@@ -12,6 +12,8 @@ class Room {
 		this._numVotedPlayers = 0;
 
 		this._players = new Map();
+		this._removeQueue = [];
+		this._joinQueue = [];
 	}
 
 	_startPublicMatchTimer(app, io) {
@@ -82,17 +84,23 @@ class Room {
 			let book = player.book;
 			if (player.playing) {			
 				if (this._round == 1) {
-					if (book.length == 0) {
-						book[0] = "NS";
-						book[1] = "NS";
-					} else if (book.length == 1) {
-						book[1] = "NS";
+					if (book.length <= 1) {
+						//they didn't submit on the first round
+						//indicates clearly afk --> kick them
+						this.removePlayer(socketID);
 					}
 				} else if (book.length < this._round + 1) {
-					book[this._round] = "NS";
+					player.makeBookBehind();
 				}
 			}
+		});
 
+		this._insertWaitingPlayers();
+
+		playersPlaying = this.playersPlaying();
+		numPlayers = playersPlaying.length;
+		i = 0;
+		this._players.forEach((player,socketID, map) => {
 			//Handles players book holdings
 			let index = i + 1 - (this._round + 1);
   			if (index < 0) index = numPlayers + index;
@@ -216,6 +224,24 @@ class Room {
 		if (this._players.get(socketID).votedNextBook) {
 			this._numVotedPlayers--;
 		}
+
+		//TODO: WIP
+		if (this._hasSubmitted(socketID)) {
+			//allow round to finish
+			//add player to queue to replace
+			this._removeQueue.unshift(this._players.get(socketID));
+		}
+		else {
+			if (this._round == 0 || this._round == 1) {
+				//delete from game instantly
+			} else {
+				//delete previous players guess/drawing
+				this._players.get(this._players.get(socketID).playersBookId).makeBookBehind();
+				//queue up for removal
+				this._removeQueue.unshift(this._players.get(socketID));
+			}
+		}
+
 		this._players.delete(socketID);
 		if (this._publicGame) {
 			if (this.playerCount < 4) {
@@ -225,6 +251,17 @@ class Room {
 
 		}
 		//TODO: Pick a new host
+	}
+
+	_insertWaitingPlayers() {
+		this._removeQueue.forEach((removedPlayer) => {
+			if (this._joinQueue.length != 0) {
+				let joiningPlayer = this._joinQueue.pop();
+				joiningPlayer.book = removedPlayer.book;
+				joiningPlayer.
+			}
+		});
+		this._removeQueue = [];
 	}
 
 	setHost(socketID) {
@@ -245,8 +282,8 @@ class Room {
 		let id = this._players.get(socketID).playersBookId;
 		let book = this._players.get(id).book;
 		if (this._round == 1) {
-			return book.length == 2;
-		} else return book.length == this._round + 1;
+			return book.length == 2 - book.roundsBehind;
+		} else return book.length == this._round + 1 - book.roundsBehind;
 	}
 
 	get gameOver() {

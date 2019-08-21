@@ -3,6 +3,7 @@ module.exports =
     class Player {
         constructor(socketID, name, playing, avatarNumber) {
             this.book = [];
+            this.book.roundsBehind = 0;
             this.playersBookId = socketID;
             this.name = name;
             this.id = socketID;
@@ -13,6 +14,12 @@ module.exports =
 
         resetBook() {
             this.book = [];
+            this.book.roundsBehind = 0;
             this.playersBookId = this.id;
+        }
+
+        makeBookBehind() {
+            this.book.pop();
+            this.book.roundsBehind++;
         }
     };
