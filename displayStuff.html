@@ -33,7 +33,9 @@
     canvas.height = height;
 
     map.forEach((book, socketID, map) => {
+        console.log(bookNum);
         let bookWidth = getWidthForBookNum(bookNum);
+        console.log(bookWidth);
         //Draw a vertical line from top to bottom
         //round i = 0, is actually just round 1
         //also i = 1, is still round 1 but just the draw part
@@ -56,9 +58,16 @@
                 writeText(name, bookWidth + 5, roundHeight + 5, false);
 
                 let image = new Image();
+                image.bookWidth = bookWidth;
                 image.onload = function() {
+                    console.log("entering load");
+                    console.log(image.width);
+                    console.log(image.height);
+                    console.log(this.bookWidth);
                     let centerX = bookWidth + WIDTH / 2 - image.width / 2;
                     let centerY = roundHeight + HEIGHT / 2 - image.height / 2;
+                    console.log(centerX);
+                    console.log(centerY);
                     let ctx = canvas.getContext("2d");
                     ctx.drawImage(image, centerX, centerY);
                     numDrawsGuesses++;
@@ -67,7 +76,8 @@
                         makeImage();
                     }
                 };
-                image.src = data;
+                console.log("setting src");
+                image.src = "data:image/png;base64," + data;
 
             }
         }

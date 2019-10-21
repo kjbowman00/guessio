@@ -26,7 +26,7 @@
                     <button onclick="changeAvatar(-1)" class="arrow-button" type='button'><strong>&gt</strong></button>
                 </div>
                  <div id='name-box'>
-                    <input placeholder="Enter a name" id="name-text-input" type='text'>
+                    <input placeholder="Enter a name" id="name-text-input" type='text' autocomplete="off">
                     <button onclick="clickedPlay();" class='big-button' type="button">Join Public Match</button>
                     <button onclick="clickedCreate();" class='big-button' type="button">Create Private Match</button>
                     <button onclick="clickedJoin();" class='big-button' type="button">Join Private Match</button>
@@ -38,13 +38,13 @@
     <div id='create-room-box'>
             <button onclick="backToMenu();" class="back-button" src="/images/back-button.png"></button>
             <h2>Enter a room name:</h2>
-            <input id="create-room-text-input" type='text'>
+            <input id="create-room-text-input" type='text' autocomplete="off">
             <button onclick="createRoom();" class='big-button' type="button">Create Room</button>
         </div>
     <div id='join-room-box'>
             <button onclick="backToMenu();" class="back-button" src="/images/back-button.png"></button>
             <h2>Enter the room name:</h2>
-            <input id="join-room-text-input" type='text'>
+            <input id="join-room-text-input" type='text' autocomplete="off">
             <button onclick="joinRoom();" class='big-button' type="button">Join Room</button>
         </div>
     <div id='wait-room-box'>
@@ -95,7 +95,7 @@
             </div>
             <div id="guess-box">
                <h1>Pick a word or phrase to draw:</h1>
-               <input id='guess_form_text' type='text' maxlength='180'>
+               <input id='guess_form_text' type='text' maxlength='180' autocomplete="off">
                <input type='submit' value='Submit'>
                <h1 id='guess-timer'>seconds left</h1>
             </div>
@@ -108,7 +108,7 @@
         <div id='chat-box-scroller'><h1>chat bubbles here</h1>
         </div>
         <form id='chat-box-form' class="disabled" onsubmit="return chatSubmit()" action="">
-            <input disabled class='mouse-disabled' id='chat-box-input' style="cursor:inherit" type='text' maxlength='80'>
+            <input disabled class='mouse-disabled' id='chat-box-input' style="cursor:inherit" type='text' maxlength='80' autocomplete="off">
             <input disabled type='submit' class='big-button mouse-disabled' style="cursor:inherit;width:30%" value='Send'>
         </form>
     </div>

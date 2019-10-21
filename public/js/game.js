@@ -177,7 +177,9 @@ socket.on('chat_message', function(data) {
     bubble.appendChild(paragraphBubble);
 
     //add it to the chatbox
-    document.getElementById("chat-box-scroller").appendChild(bubble);
+    let chatBoxScroller = document.getElementById("chat-box-scroller");
+    chatBoxScroller.appendChild(bubble);
+    chatBoxScroller.scrollTop = chatBoxScroller.scrollHeight;
 });
 socket.on('public_match_timer_start', function() {
     console.log("hey");
@@ -747,6 +749,8 @@ function chatSubmit(node) {
 
     //add it to the chatbox
     document.getElementById("chat-box-scroller").appendChild(bubble);
+    let chatBoxScroller = document.getElementById("chat-box-scroller");
+    chatBoxScroller.scrollTop = chatBoxScroller.scrollHeight;
     return false;
 }
 
